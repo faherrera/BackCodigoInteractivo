@@ -13,7 +13,7 @@ namespace BackCodigoInteractivo.Models
         public int Class_CourseID { get; set; }
         public int CodeClass { get; set; }
         public String TitleClass { get; set; }
-        public String Path_Video { get; set; }
+        public String PathVideo { get; set; }
         public int CourseID { get; set; }  
     }
 }

@@ -217,6 +217,7 @@
     <Compile Include="ModelsFactory\CourseModelFactory.cs" />
     <Compile Include="ModelsFactory\RoleModelFactory.cs" />
     <Compile Include="ModelsFactory\UserModelFactory.cs" />
+    <Compile Include="ModelsNotMapped\ClassesCourse\Responses\ClassesCourse.cs" />
     <Compile Include="ModelsNotMapped\Courses\Requests\PCourse.cs" />
     <Compile Include="ModelsNotMapped\Courses\Responses\CourseResponse.cs" />
     <Compile Include="ModelsNotMapped\Courses\Responses\CoursesResponse.cs" />

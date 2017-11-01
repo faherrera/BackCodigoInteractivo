@@ -62,7 +62,7 @@ namespace BackCodigoInteractivo.Repositories
 
                 if (_courses.Count() == 0)
                 {
-                    return returnCoursesResponse(1,true,"No hay cursos cargados todavia",_courses);
+                    return returnCoursesResponse(2,true,"No hay cursos cargados todavia",_courses);
                 }
 
                 return returnCoursesResponse(1, true, string.Format("{0} Cursos devueltos correctamente",_courses.Count), _courses);

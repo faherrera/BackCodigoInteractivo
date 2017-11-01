@@ -33,7 +33,7 @@ namespace BackCodigoInteractivo.ModelsFactory
                 Class_CourseID = _class.Class_CourseID,
                 CodeClass = _class.CodeClass,
                 TitleClass = _class.TitleClass,
-                Path_Video = _class.Path_Video,
+                PathVideo = _class.PathVideo,
                 CourseID = _class.CourseID
             };
         }
