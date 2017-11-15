@@ -8,6 +8,15 @@ namespace BackCodigoInteractivo.ModelsNotMapped.ClassesCourse
 {
     public class ClassResponse
     {
+        public ClassResponse() { }
+
+        public ClassResponse(Class_Course _class, bool _status = false, string _message = "Error en la clase", int _codeState = 0)
+        {
+            this._status = _status;
+            this._message = _message;
+            this._codeState = _codeState;
+            this._class = _class;
+        }
 
         public bool _status { get; set; }
         public string _message { get; set; }

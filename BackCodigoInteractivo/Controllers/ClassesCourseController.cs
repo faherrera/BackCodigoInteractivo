@@ -1,4 +1,5 @@
-﻿using BackCodigoInteractivo.Repositories;
+﻿using BackCodigoInteractivo.Models;
+using BackCodigoInteractivo.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,24 +22,28 @@ namespace BackCodigoInteractivo.Controllers
         }
 
         // GET: api/ClassesCourse/5
-        public string Get(int id)
+        public IHttpActionResult Get(int id)
         {
-            return "value";
+            return Json(cr.detailClass(id));
         }
 
         // POST: api/ClassesCourse
-        public void Post([FromBody]string value)
+        public IHttpActionResult Post(Class_Course _class)
         {
+            return Json(cr.storeClass(_class));
         }
 
         // PUT: api/ClassesCourse/5
-        public void Put(int id, [FromBody]string value)
+        public IHttpActionResult Put(int id, Class_Course _class)
         {
+            return Json(cr.putClass(id,_class));
         }
 
         // DELETE: api/ClassesCourse/5
-        public void Delete(int id)
+        public IHttpActionResult Delete(int id)
         {
+            return Json(cr.deleteClass(id));
         }
+
     }
 }

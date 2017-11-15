@@ -31,13 +31,14 @@ namespace BackCodigoInteractivo.Repositories
             
         }
 
-        public CourseResponse returnCourseResponse(int codeState = 0, bool status = false, string message = "Está vacio", Object obj = null)
+        public CourseResponse returnCourseResponse(int codeState = 0, bool status = false, string message = "Está vacio", Object obj = null, ICollection<Class_Course> _classes = null)
         {
             CourseResponse _cresponse = new CourseResponse();
             _cresponse.codeState = codeState;
             _cresponse.status = status;
             _cresponse.message = message;
             _cresponse.obj = obj;
+            _cresponse._classesCourse = _classes;
 
             return _cresponse;
         }
@@ -146,10 +147,10 @@ namespace BackCodigoInteractivo.Repositories
 
             if (_course == null) return returnCourseResponse(0, false, "El code no es de un curso existente"); // If there isnt course, so I return json with message error.
 
-            return returnCourseResponse(1, true, "El codigo existe", _course);
+            ICollection<Class_Course> _classes = ctx.Classes.Where(x => x.CourseID == _course.CourseID).ToList();
 
-
-
+            return returnCourseResponse(1, true, "El codigo existe", _course,_classes);
+            
         }
 
 
