@@ -206,6 +206,7 @@
     <Compile Include="Controllers\CoursesController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
+    <Compile Include="Controllers\ResClassController.cs" />
     <Compile Include="Controllers\RolesController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="DAL\CodigoInteractivoContext.cs" />
@@ -221,6 +222,7 @@
     <Compile Include="ModelsNotMapped\Courses\Requests\PCourse.cs" />
     <Compile Include="ModelsNotMapped\Courses\Responses\CourseResponse.cs" />
     <Compile Include="ModelsNotMapped\Courses\Responses\CoursesResponse.cs" />
+    <Compile Include="ModelsNotMapped\ResourcesClasses\Responses\ResClass.cs" />
     <Compile Include="ModelsNotMapped\TokenReceived.cs" />
     <Compile Include="ModelsNotMapped\UserResponse.cs" />
     <Compile Include="Models\Class_Course.cs" />
@@ -233,6 +235,7 @@
     <Compile Include="Repositories\ClassesRepository.cs" />
     <Compile Include="Repositories\CourseRepository.cs" />
     <Compile Include="Repositories\CredentialsRepository.cs" />
+    <Compile Include="Repositories\ResClassRepository.cs" />
     <Compile Include="Repositories\RoleRepository.cs" />
     <Compile Include="Repositories\UserRepository.cs" />
   </ItemGroup>
