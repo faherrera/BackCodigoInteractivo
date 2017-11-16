@@ -26,82 +26,28 @@ namespace BackCodigoInteractivo.Controllers
         }
 
         // GET: api/ResClass/5
-        [ResponseType(typeof(Resource_class))]
         public IHttpActionResult GetResource_class(int id)
         {
-            Resource_class resource_class = db.Resources.Find(id);
-            if (resource_class == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(resource_class);
+            return Json(_rcr.detailResource(id));
         }
 
         // PUT: api/ResClass/5
-        [ResponseType(typeof(void))]
         public IHttpActionResult PutResource_class(int id, Resource_class resource_class)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            if (id != resource_class.Resource_ClassID)
-            {
-                return BadRequest();
-            }
-
-            db.Entry(resource_class).State = EntityState.Modified;
-
-            try
-            {
-                db.SaveChanges();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!Resource_classExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return StatusCode(HttpStatusCode.NoContent);
+            return Json(_rcr.editResource(id, resource_class));
         }
 
         // POST: api/ResClass
-        [ResponseType(typeof(Resource_class))]
         public IHttpActionResult PostResource_class(Resource_class resource_class)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            db.Resources.Add(resource_class);
-            db.SaveChanges();
-
-            return CreatedAtRoute("DefaultApi", new { id = resource_class.Resource_ClassID }, resource_class);
+            return Json(_rcr.storeResource(resource_class));
         }
 
         // DELETE: api/ResClass/5
         [ResponseType(typeof(Resource_class))]
         public IHttpActionResult DeleteResource_class(int id)
         {
-            Resource_class resource_class = db.Resources.Find(id);
-            if (resource_class == null)
-            {
-                return NotFound();
-            }
-
-            db.Resources.Remove(resource_class);
-            db.SaveChanges();
-
-            return Ok(resource_class);
+            return Json(_rcr.deleteResource(id));
         }
 
         protected override void Dispose(bool disposing)

@@ -61,7 +61,8 @@ namespace BackCodigoInteractivo.Repositories
 
             _cc = ctx.Classes.Where(x=> x.CodeClass == code).FirstOrDefault();
 
-            return _cr = new ClassResponse(_cc,true,"Clase traida correctamente",1);
+            
+            return _cr = new ClassResponse(_cc,true,"Clase traida correctamente",1,getAllResources(_cc.Class_CourseID));
 
         }
 
@@ -131,7 +132,11 @@ namespace BackCodigoInteractivo.Repositories
 
             if (!busyClass(code)) return _cr = new ClassResponse(_cc,false,"No existe la clase con ese codigo");
 
+
             Class_Course _classToRemove = ctx.Classes.Where(x => x.CodeClass == code).First();
+
+            if(hasChildren(_classToRemove.Class_CourseID)) { return _cr = new ClassResponse(_classToRemove, false, "Esta clase posee recursos anidados,no es posible eliminarla hasta no modificar-eliminar a sus hijos", 4); } 
+
             string name = _classToRemove.TitleClass;
                 
             try
@@ -158,6 +163,18 @@ namespace BackCodigoInteractivo.Repositories
         public bool busyClass(int code)
         {
             return ctx.Classes.Any(x => x.CodeClass == code);
+        }
+
+        public ICollection<Resource_class> getAllResources(int id)
+        {
+            ICollection<Resource_class> _resource = ctx.Resources.Where(x => x.Class_CourseID == id).ToList();
+
+            return _resource; 
+        }
+
+        public bool hasChildren(int id)
+        {
+            return ctx.Resources.Any(x => x.Class_CourseID == id);
         }
     }
 }

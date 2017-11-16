@@ -10,11 +10,12 @@ namespace BackCodigoInteractivo.ModelsNotMapped.ClassesCourse
     {
         public ClassResponse() { }
 
-        public ClassResponse(Class_Course _class, bool _status = false, string _message = "Error en la clase", int _codeState = 0)
+        public ClassResponse(Class_Course _class = null, bool _status = false, string _message = "Error en la clase", int _codeState = 0, ICollection<Resource_class> _resources = null)
         {
             this._status = _status;
             this._message = _message;
             this._codeState = _codeState;
+            this._resources = _resources;
             this._class = _class;
         }
 
@@ -22,6 +23,7 @@ namespace BackCodigoInteractivo.ModelsNotMapped.ClassesCourse
         public string _message { get; set; }
         public int _codeState { get; set; }
         public Class_Course _class { get; set; }
+        public ICollection<Resource_class> _resources { get; set; }
     }
 
     public class ClassesResponse
