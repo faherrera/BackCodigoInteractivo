@@ -106,6 +106,7 @@ namespace BackCodigoInteractivo.Repositories
 
             _classOriginal.CourseID = _classModified.CourseID;
             _classOriginal.PathVideo = _classModified.PathVideo;
+            _classOriginal.Description = _classModified.Description;
             _classOriginal.TitleClass = _classModified.TitleClass;
 
             try

@@ -95,9 +95,9 @@ namespace BackCodigoInteractivo.Repositories
 
             Resource_class _original = getResource(code);
 
-            _original.Description = _rclass.Description;
             _original.ExternalLink = _rclass.ExternalLink;
             _original.TitleResource = _rclass.TitleResource;
+            _original.Class_CourseID = _rclass.Class_CourseID;
 
             try
             {
