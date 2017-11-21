@@ -15,46 +15,42 @@ namespace BackCodigoInteractivo.Controllers
     [EnableCors(origins: "*", headers: "*", methods: "*")]
     public class UserController : ApiController
     {
-        UserModelFactory _user;
         UserRepository ur = new UserRepository();
         CodigoInteractivoContext db = new CodigoInteractivoContext();
 
-        public UserController()
-        {
-            _user = new UserModelFactory();
-        }
-
+     
         // GET: api/User
-        public IEnumerable<User> Get()
+        public IHttpActionResult Get()
         {
-            return ur.getAllUsers().ToList().Select(u => _user.Create(u));
+            return Json(ur.listUsers());
 
         }
 
         // GET: api/User/5
-        public IHttpActionResult Get(int id)
+        public IHttpActionResult  Get(int id)
         {
-            return Json(ur.returnUserJson(id));
+            return Json(ur.detailUser(id));
+
         }
 
         // POST: api/User
         public IHttpActionResult Post(User user)
         {
-            db.Users.Add(user);
-            db.SaveChanges();
-
-            return Json(ur.returnUserJson(user.UserID));
-             
+            return Json(ur.storeUser(user));            
         }
 
         // PUT: api/User/5
-        public void Put(int id, [FromBody]string value)
+        public IHttpActionResult Put(int id, User user)
         {
+            return Json(ur.putUser(id,user));
+
         }
 
+
         // DELETE: api/User/5
-        public void Delete(int id)
+        public IHttpActionResult Delete(int id)
         {
+            return Json(ur.deleteUser(id));
         }
     }
 }

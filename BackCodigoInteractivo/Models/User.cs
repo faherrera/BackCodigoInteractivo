@@ -17,8 +17,6 @@ namespace BackCodigoInteractivo.Models
         public string Password { get; set; }
         public string Token { get; set; }
         public int? RolID { get; set; }     //RolID
-
-        [NotMapped]
-        public Role Role { get; set; }
+        
     }
 }

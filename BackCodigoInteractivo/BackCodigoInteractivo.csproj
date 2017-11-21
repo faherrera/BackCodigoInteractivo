@@ -225,6 +225,7 @@
     <Compile Include="ModelsNotMapped\ResourcesClasses\Responses\ResClass.cs" />
     <Compile Include="ModelsNotMapped\TokenReceived.cs" />
     <Compile Include="ModelsNotMapped\UserResponse.cs" />
+    <Compile Include="ModelsNotMapped\Users\Responses\Responses.cs" />
     <Compile Include="Models\Class_Course.cs" />
     <Compile Include="Models\Course.cs" />
     <Compile Include="Models\Resource_class.cs" />

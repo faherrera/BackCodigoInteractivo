@@ -77,7 +77,7 @@ namespace BackCodigoInteractivo.Repositories
             }
             catch (Exception e)
             {
-                return _rcr = new ResClassesResponse(_rclass,false,"Error en la carga de datos");
+                return _rcr = new ResClassesResponse(_rclass,false,string.Format("Error en la carga de datos ${0}",e.Message));
                 
             }
 
@@ -145,7 +145,7 @@ namespace BackCodigoInteractivo.Repositories
             }
             catch (Exception e)
             {
-                return _rcres = new ResClassesResponse(_rc,false,string.Format("Ocurrío un error durante la eliminacion de {0}, no pudo ser posible, intentelo de nuevo más tarde",name));
+                return _rcres = new ResClassesResponse(_rc,false,string.Format("Ocurrío un error durante la eliminacion de {0}, no pudo ser posible, intentelo de nuevo más tarde. \n Error -> {1}",name,e.Message));
 
             }
 

@@ -20,7 +20,7 @@ namespace BackCodigoInteractivo.ModelsFactory
                 Name = _user.Name,
                 Email = _user.Email,
                 Token = _user.Token,
-                Role = db.Roles.Find(_user.RolID)
+               // Role = db.Roles.Find(_user.RolID)
             };
 
         }
