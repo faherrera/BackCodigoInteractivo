@@ -72,9 +72,9 @@ namespace BackCodigoInteractivo.Repositories
 
             if (_classCourse == null) return _cr = new ClassResponse(_classCourse,false,"No se cargó, no envió correctamente los datos");
 
-            int code = _classCourse.Class_CourseID;
+            int code = _classCourse.CodeClass;
 
-            if (ctx.Classes.Where(x => x.Class_CourseID == code).Any()) return _cr = new ClassResponse(_classCourse,false,"No puede haber una clase con el mismo codigo, por favor reemplazarlo");
+            if (ctx.Classes.Where(x => x.CodeClass == code).Any()) return _cr = new ClassResponse(_classCourse,false,"No puede haber una clase con el mismo codigo, por favor reemplazarlo");
 
             try
             {
