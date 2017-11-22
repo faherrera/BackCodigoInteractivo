@@ -59,7 +59,7 @@ namespace BackCodigoInteractivo.Repositories
             catch (Exception e)
             {
 
-                return _usersRes = new UsersResponse();
+                return _usersRes = new UsersResponse(null, String.Format("Error en la petición -> {0}", e.Message));
             }
 
 
@@ -80,7 +80,7 @@ namespace BackCodigoInteractivo.Repositories
             }
             catch (Exception e)
             {
-                return _userRes = new UserResponse();
+                return _userRes = new UserResponse("Error en la peticion, intente nuevamente por favor. -> " + e.Message);
             }
         }
 

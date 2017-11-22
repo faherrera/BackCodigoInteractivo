@@ -10,96 +10,43 @@ using System.Web.Http;
 using System.Web.Http.Description;
 using BackCodigoInteractivo.DAL;
 using BackCodigoInteractivo.Models;
+using BackCodigoInteractivo.Repositories;
 
 namespace BackCodigoInteractivo.Controllers
 {
     public class RolesController : ApiController
     {
         private CodigoInteractivoContext db = new CodigoInteractivoContext();
+        private RoleRepository _roleRepo = new RoleRepository();
 
         // GET: api/Roles
-        public IQueryable<Role> GetRoles()
+        public IHttpActionResult GetRoles()
         {
-            return db.Roles;
+            return Json(_roleRepo.listRoles());
         }
 
         // GET: api/Roles/5
-        [ResponseType(typeof(Role))]
         public IHttpActionResult GetRole(int id)
         {
-            Role role = db.Roles.Find(id);
-            if (role == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(role);
+            return Json(_roleRepo.detailRole(id));
         }
 
         // PUT: api/Roles/5
-        [ResponseType(typeof(void))]
         public IHttpActionResult PutRole(int id, Role role)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            if (id != role.RoleID)
-            {
-                return BadRequest();
-            }
-
-            db.Entry(role).State = EntityState.Modified;
-
-            try
-            {
-                db.SaveChanges();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!RoleExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return StatusCode(HttpStatusCode.NoContent);
+            return Json(_roleRepo.putRole(id,role));
         }
 
         // POST: api/Roles
-        [ResponseType(typeof(Role))]
         public IHttpActionResult PostRole(Role role)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            db.Roles.Add(role);
-            db.SaveChanges();
-
-            return CreatedAtRoute("DefaultApi", new { id = role.RoleID }, role);
+            return Json(_roleRepo.storeRole(role));
         }
 
         // DELETE: api/Roles/5
-        [ResponseType(typeof(Role))]
         public IHttpActionResult DeleteRole(int id)
         {
-            Role role = db.Roles.Find(id);
-            if (role == null)
-            {
-                return NotFound();
-            }
-
-            db.Roles.Remove(role);
-            db.SaveChanges();
-
-            return Ok(role);
+            return Json(_roleRepo.deleteRole(id));
         }
 
         protected override void Dispose(bool disposing)
@@ -111,9 +58,5 @@ namespace BackCodigoInteractivo.Controllers
             base.Dispose(disposing);
         }
 
-        private bool RoleExists(int id)
-        {
-            return db.Roles.Count(e => e.RoleID == id) > 0;
-        }
     }
 }
