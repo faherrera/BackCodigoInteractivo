@@ -14,7 +14,7 @@ namespace BackCodigoInteractivo.Models
         public int CodeClass { get; set; }
         public String TitleClass { get; set; }
         public String PathVideo { get; set; }
-        public String Description { get; set; }
+        public String ExternalLink { get; set; }
         public int CourseID { get; set; }  
 
     }

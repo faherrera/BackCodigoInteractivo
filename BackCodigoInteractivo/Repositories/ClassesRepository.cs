@@ -6,6 +6,7 @@ using System.Linq;
 using System.Web;
 using BackCodigoInteractivo.ModelsNotMapped;
 using BackCodigoInteractivo.ModelsNotMapped.ClassesCourse;
+using BackCodigoInteractivo.ModelsNotMapped.ClassesCourse.ModelFactory;
 
 namespace BackCodigoInteractivo.Repositories
 {
@@ -28,11 +29,18 @@ namespace BackCodigoInteractivo.Repositories
         {
             ClassesResponse _clresponse;
 
-            ICollection<Class_Course> _classes;
+            List<ClassesModelFactory> _classes = new List<ClassesModelFactory>();
+
 
             try
             {
-                _classes = getAllClasses().ToList(); 
+                var _cl = getAllClasses().ToList();
+
+                foreach (var clase in _cl)
+                {
+                    ClassesModelFactory claseFactory = new ClassesModelFactory(clase.CodeClass,clase.TitleClass,clase.PathVideo,clase.ExternalLink,clase.CourseID);
+                    _classes.Add(claseFactory);
+                } 
 
                 if (_classes.Count() > 0)
                 {
@@ -44,7 +52,6 @@ namespace BackCodigoInteractivo.Repositories
             }
             catch (Exception e)
             {
-                _classes = null;
                 return _clresponse = new ClassesResponse(_classes,false,e.Message);
             }
 
@@ -55,14 +62,15 @@ namespace BackCodigoInteractivo.Repositories
             ClassResponse _cr;
             Class_Course _cc;
 
-            if (code == 0) return _cr = new ClassResponse(_cc = null, false,"No puede ser 0 el codigo");
+            if (code == 0) return _cr = new ClassResponse(null, false,"No puede ser 0 el codigo");
 
-            if (!busyClass(code))  return _cr = new ClassResponse(_cc = null, false, "No existe la clase con ese codigo", 2);
+            if (!busyClass(code))  return _cr = new ClassResponse(null, false, "No existe la clase con ese codigo", 2);
 
             _cc = ctx.Classes.Where(x=> x.CodeClass == code).FirstOrDefault();
 
-            
-            return _cr = new ClassResponse(_cc,true,"Clase traida correctamente",1,getAllResources(_cc.Class_CourseID));
+            ClassesModelFactory modelFactory = new ClassesModelFactory(_cc.CodeClass,_cc.TitleClass,_cc.PathVideo,_cc.ExternalLink,_cc.CourseID);
+
+            return _cr = new ClassResponse(modelFactory,true,"Clase traida correctamente",1);
 
         }
 
@@ -70,57 +78,59 @@ namespace BackCodigoInteractivo.Repositories
         {
             ClassResponse _cr;
 
-            if (_classCourse == null) return _cr = new ClassResponse(_classCourse,false,"No se cargó, no envió correctamente los datos");
+            if (_classCourse == null) return _cr = new ClassResponse(null,false,"No se cargó, no envió correctamente los datos");
 
             int code = _classCourse.CodeClass;
 
-            if (ctx.Classes.Where(x => x.CodeClass == code).Any()) return _cr = new ClassResponse(_classCourse,false,"No puede haber una clase con el mismo codigo, por favor reemplazarlo");
+            if (ctx.Classes.Where(x => x.CodeClass == code).Any()) return _cr = new ClassResponse(null,false,"No puede haber una clase con el mismo codigo, por favor reemplazarlo");
 
             try
             {
                 ctx.Classes.Add(_classCourse);
                 ctx.SaveChanges();
 
-
+                var model = new ClassesModelFactory(_classCourse.CodeClass,_classCourse.TitleClass,_classCourse.PathVideo,_classCourse.ExternalLink,_classCourse.CourseID);
+                return _cr = new ClassResponse(model,true,"Cargado correctamente la clase",1);
             }
             catch (Exception e)
             {
-                return _cr = new ClassResponse(_classCourse,false,e.Message);
+                return _cr = new ClassResponse(null,false,e.Message);
                 
             }
 
-            return _cr = new ClassResponse(_classCourse,true,"Cargado correctamente la clase",1);
         }
 
         public ClassResponse putClass(int code, Class_Course _classModified) {
 
             ClassResponse _cr;
 
-            if (code == 0) return _cr = new ClassResponse(_classModified, false,"Error en el codigo de la clase, revisar por favor");
+            if (code == 0) return _cr = new ClassResponse(null, false,"Error en el codigo de la clase, revisar por favor");
 
-            if (_classModified == null) return _cr = new ClassResponse(_classModified, false, "Error con la carga de datos, está vacio");
+            if (_classModified == null) return _cr = new ClassResponse(null, false, "Error con la carga de datos, está vacio");
 
-            if (!busyClass(code)) return _cr = new ClassResponse(_classModified, false, "No existe la clase con ese codigo");
+            if (!busyClass(code)) return _cr = new ClassResponse(null, false, "No existe la clase con ese codigo");
 
             Class_Course _classOriginal = ctx.Classes.Where(x => x.CodeClass == code).FirstOrDefault();
 
             _classOriginal.CourseID = _classModified.CourseID;
             _classOriginal.PathVideo = _classModified.PathVideo;
-            _classOriginal.Description = _classModified.Description;
             _classOriginal.TitleClass = _classModified.TitleClass;
 
             try
             {
                 ctx.Entry(_classOriginal).State = System.Data.Entity.EntityState.Modified;
                 ctx.SaveChanges();
+
+                ClassesModelFactory _classModel = new ClassesModelFactory(_classOriginal.CodeClass,_classOriginal.TitleClass,_classOriginal.PathVideo,_classOriginal.ExternalLink,_classOriginal.CourseID);
+                return _cr = new ClassResponse(_classModel, true, "Clase actualizada correctamente", 1);
+
             }
             catch (Exception e)
             {
-                return _cr = new ClassResponse(_classModified, false,"Error en la carga, intente nuevamente en unos minutos  "+ e.Message ,0);
+                return _cr = new ClassResponse(null, false,"Error en la carga, intente nuevamente en unos minutos  "+ e.Message ,0);
 
             }
 
-            return _cr = new ClassResponse(_classOriginal, true,"Clase actualizada correctamente",1);
 
 
 
@@ -129,14 +139,11 @@ namespace BackCodigoInteractivo.Repositories
         public ClassResponse deleteClass(int code)
         {
             ClassResponse _cr;
-            Class_Course _cc = null;
 
-            if (!busyClass(code)) return _cr = new ClassResponse(_cc,false,"No existe la clase con ese codigo");
+            if (!busyClass(code)) return _cr = new ClassResponse(null,false,"No existe la clase con ese codigo");
 
 
             Class_Course _classToRemove = ctx.Classes.Where(x => x.CodeClass == code).First();
-
-            if(hasChildren(_classToRemove.Class_CourseID)) { return _cr = new ClassResponse(_classToRemove, false, "Esta clase posee recursos anidados,no es posible eliminarla hasta no modificar-eliminar a sus hijos", 4); } 
 
             string name = _classToRemove.TitleClass;
                 
@@ -144,14 +151,14 @@ namespace BackCodigoInteractivo.Repositories
             {
                 ctx.Classes.Remove(_classToRemove);
                 ctx.SaveChanges();
+                return _cr = new ClassResponse(null,true,string.Format("Clase {0} eliminada correctamente",name),1);
             }
             catch (Exception e)
             {
 
-                return _cr = new ClassResponse(_cc,false,"Ocurrió un error en la eliminación, por favor intente nuevamente" + e.Message);
+                return _cr = new ClassResponse(null,false,"Ocurrió un error en la eliminación, por favor intente nuevamente" + e.Message);
             }
 
-            return _cr = new ClassResponse(_cc,true,string.Format("Clase {0} eliminada correctamente",name),1);
 
         }
 
