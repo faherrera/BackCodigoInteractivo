@@ -36,36 +36,9 @@ namespace BackCodigoInteractivo.Controllers
         }
 
         // POST: api/Auth
-        public IHttpActionResult Post(TokenReceived _tr)
+        public void Post(TokenReceived _tr)
         {
             
-            
-
-            if (_tr != null)
-            {
-                if (_authRepo.existsToken(_tr.Token))   //Si viene por body.
-                {
-                    return Json(_authRepo.returnUserView(_tr.Token));   //Retorno el objeto de tipo UserResponse serializado.
-                }
-
-                return NotFound();
-            }
-
-            if (Request.Headers.Count() > 0)    //Existen parametros via header.
-            {
-                string _token = Request.Headers.GetValues("Token").FirstOrDefault();  //Extraigo el token.
-
-                if (_authRepo.existsToken(_token)) //Consulto si es que existe el token.
-                {
-                    return Json(_authRepo.returnUserView(_token));   //Retorno el objeto de tipo UserResponse serializado.
-
-                }
-
-                return NotFound();
-
-            }
-
-            return BadRequest("ERROR en la peticion, 404");
         }
 
         // PUT: api/Auth/5

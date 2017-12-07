@@ -4,7 +4,6 @@ using BackCodigoInteractivo.ModelsFactory;
 using BackCodigoInteractivo.ModelsNotMapped;
 using BackCodigoInteractivo.ModelsNotMapped.Courses.ModelFactory;
 using BackCodigoInteractivo.ModelsNotMapped.CoursesModels;
-using BackCodigoInteractivo.ModelsNotMapped.CoursesModels.Responses;
 using System;
 using System.Collections.Generic;
 using System.Drawing;

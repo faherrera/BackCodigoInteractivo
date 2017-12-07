@@ -4,6 +4,8 @@ using BackCodigoInteractivo.ModelsNotMapped;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
 using System.Web;
 using System.Web.Http.Cors;
 
@@ -11,32 +13,62 @@ namespace BackCodigoInteractivo.Repositories
 {
     public class AuthRepository
     {
-        CodigoInteractivoContext ctx = new CodigoInteractivoContext();
+        protected CodigoInteractivoContext ctx = new CodigoInteractivoContext();
 
-        public bool existsToken(string token)   //Consultar si existe el token.
+
+        //Getters
+
+        public User getUserFromUsername(string username)
         {
-            return ctx.Users.Where(u => u.Token == token).Any();
+            return ctx.Users.Where(x => x.Username == username).FirstOrDefault();
+        }
+        //If Exist
+       
+        public bool AlreadyExistForUsername(string username) {
+
+            return ctx.Users.Any(x => x.Username == username);
+
         }
 
-        public UserResponse returnUserView(string token)
+        public bool AlreadyExistForEmail(string email)
         {
-            User _userDB = ctx.Users.Where(u => u.Token == token).FirstOrDefault();
 
-            UserResponse _userResponse = new UserResponse();
+            return ctx.Users.Any(x => x.Email == email);
 
-            _userResponse.Name = _userDB.Name;
-            _userResponse.Email = _userDB.Email;
-            _userResponse.PathPhoto = null;
-            _userResponse.Token = _userDB.Token;
-
-            return _userResponse;
         }
 
-        public string tokenReceivedFromHeader(IEnumerable<string> getValuesFromHeader )
+        //Credentials
+
+        public bool CredentialsLoginMatch( User user, string password)
         {
-            return getValuesFromHeader.FirstOrDefault();
+            try
+            {
+                if (user == null) return false;
+
+                if (user.Password != password)
+                {
+                    return false;
+                }
+
+                return true;
+
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
 
+        public string Encrypting(string pass)
+        {
+            SHA1 sha1 = new SHA1CryptoServiceProvider();
+
+            byte[] inputBytes = (new UnicodeEncoding()).GetBytes(pass);
+            byte[] hash = sha1.ComputeHash(inputBytes);
+
+            return Convert.ToBase64String(hash);
+
+        }
 
     }
 }

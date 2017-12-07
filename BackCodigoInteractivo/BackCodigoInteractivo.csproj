@@ -208,20 +208,20 @@
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\ResClassController.cs" />
     <Compile Include="Controllers\RolesController.cs" />
-    <Compile Include="Controllers\UserController.cs" />
+    <Compile Include="Controllers\UserRegisterController.cs" />
     <Compile Include="DAL\CodigoInteractivoContext.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="ModelsFactory\RoleModelFactory.cs" />
-    <Compile Include="ModelsFactory\UserModelFactory.cs" />
+    <Compile Include="ModelsNotMapped\Authentication\Login\Responses\LoginResponse.cs" />
+    <Compile Include="ModelsNotMapped\Authentication\Login\Responses\UserLoginResponse.cs" />
     <Compile Include="ModelsNotMapped\ClassesCourse\ModelFactory\ClassesModelFactory.cs" />
     <Compile Include="ModelsNotMapped\ClassesCourse\Responses\ClassesCourse.cs" />
     <Compile Include="ModelsNotMapped\Courses\ModelFactory\CourseModelFactory.cs" />
     <Compile Include="ModelsNotMapped\Courses\Requests\PCourse.cs" />
     <Compile Include="ModelsNotMapped\Courses\Responses\CourseResponse.cs" />
-    <Compile Include="ModelsNotMapped\Courses\Responses\CoursesResponse.cs" />
     <Compile Include="ModelsNotMapped\Inheritance\Responses\Base.cs" />
     <Compile Include="ModelsNotMapped\ResourcesClasses\Responses\ResClass.cs" />
     <Compile Include="ModelsNotMapped\Roles\Responses\Responses.cs" />
@@ -238,6 +238,8 @@
     <Compile Include="Repositories\ClassesRepository.cs" />
     <Compile Include="Repositories\CourseRepository.cs" />
     <Compile Include="Repositories\CredentialsRepository.cs" />
+    <Compile Include="Repositories\InheritanceRepository\GeneralRepository.cs" />
+    <Compile Include="Repositories\LoginRepository.cs" />
     <Compile Include="Repositories\ResClassRepository.cs" />
     <Compile Include="Repositories\RoleRepository.cs" />
     <Compile Include="Repositories\UserRepository.cs" />

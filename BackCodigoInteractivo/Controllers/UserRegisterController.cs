@@ -13,7 +13,7 @@ using System.Web.Http.Cors;
 namespace BackCodigoInteractivo.Controllers
 {
     [EnableCors(origins: "*", headers: "*", methods: "*")]
-    public class UserController : ApiController
+    public class UserRegisterController : ApiController
     {
         UserRepository ur = new UserRepository();
         CodigoInteractivoContext db = new CodigoInteractivoContext();

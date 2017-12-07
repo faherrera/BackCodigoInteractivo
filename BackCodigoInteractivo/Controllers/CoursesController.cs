@@ -3,7 +3,6 @@ using BackCodigoInteractivo.Models;
 using BackCodigoInteractivo.ModelsFactory;
 using BackCodigoInteractivo.ModelsNotMapped;
 using BackCodigoInteractivo.ModelsNotMapped.CoursesModels;
-using BackCodigoInteractivo.ModelsNotMapped.CoursesModels.Responses;
 using BackCodigoInteractivo.Repositories;
 using System;
 using System.Collections.Generic;
