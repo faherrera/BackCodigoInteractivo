@@ -20,16 +20,11 @@ namespace BackCodigoInteractivo.Controllers
     {
         private CodigoInteractivoContext ctx = new CodigoInteractivoContext();
         private CourseRepository cr = new CourseRepository();
-        private CourseModelFactory cmf;
 
-        public CoursesController()
-        {
-            cmf = new CourseModelFactory();
-        }
         // GET: api/Courses
-        public CoursesResponse Get()
+        public IHttpActionResult Get()
         {
-            return cr.listCourses();
+            return Json(cr.listCourses());
         }
 
         // GET: api/Courses/5

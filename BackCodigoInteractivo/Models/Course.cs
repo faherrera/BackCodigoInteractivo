@@ -33,7 +33,7 @@ namespace BackCodigoInteractivo.Models
         public String Duration { get; set; }
         public TypesCourseEnum TypeCourse { get; set; }
         public ModeEnum Mode { get; set; }
-        public Nullable<LevelEnum> Level { get; set; }
+        public LevelEnum Level { get; set; }
         public string Video_preview { get; set; }
         public string Thumbnail { get; set; }
         public int? ProfessorID { get; set; }       //The professor of the course. 

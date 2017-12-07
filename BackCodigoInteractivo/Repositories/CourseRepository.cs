@@ -2,6 +2,7 @@
 using BackCodigoInteractivo.Models;
 using BackCodigoInteractivo.ModelsFactory;
 using BackCodigoInteractivo.ModelsNotMapped;
+using BackCodigoInteractivo.ModelsNotMapped.Courses.ModelFactory;
 using BackCodigoInteractivo.ModelsNotMapped.CoursesModels;
 using BackCodigoInteractivo.ModelsNotMapped.CoursesModels.Responses;
 using System;
@@ -15,8 +16,9 @@ namespace BackCodigoInteractivo.Repositories
 {
     public class CourseRepository
     {
+
         private CodigoInteractivoContext ctx = new CodigoInteractivoContext();
-        private CourseModelFactory cmf = new CourseModelFactory();
+        private CourseResponse _courseR;
 
         public IQueryable<Course> GetAllCourses()
         {
@@ -31,47 +33,38 @@ namespace BackCodigoInteractivo.Repositories
             
         }
 
-        public CourseResponse returnCourseResponse(int codeState = 0, bool status = false, string message = "Está vacio", Object obj = null, ICollection<Class_Course> _classes = null)
+        public CourseResponses listCourses()
         {
-            CourseResponse _cresponse = new CourseResponse();
-            _cresponse.codeState = codeState;
-            _cresponse.status = status;
-            _cresponse.message = message;
-            _cresponse.obj = obj;
-            _cresponse._classesCourse = _classes;
-
-            return _cresponse;
-        }
-
-        public CoursesResponse returnCoursesResponse(int codeState = 0, bool status = false, string message = "Está vacio", ICollection<Course> obj = null)
-        {
-            CoursesResponse _csr = new CoursesResponse();
-            _csr.codeState = codeState;
-            _csr.status = status;
-            _csr.message = message;
-            _csr.courses = obj;
-
-            return _csr;
-        }
-
-        public CoursesResponse listCourses()
-        {
+            CourseResponses courseResponses;
 
             try
             {
-                ICollection<Course> _courses = GetAllCourses().ToList();
+                List<Course> _courses = GetAllCourses().ToList();
 
                 if (_courses.Count() == 0)
                 {
-                    return returnCoursesResponse(2,true,"No hay cursos cargados todavia",_courses);
+                    return courseResponses = new CourseResponses(null,true,"No hay registros cargados aun",4);
                 }
 
-                return returnCoursesResponse(1, true, string.Format("{0} Cursos devueltos correctamente",_courses.Count), _courses);
+                List<CourseModelFactory> listModel = new List<CourseModelFactory>();
+
+                foreach (var course in _courses)
+                {
+                    CourseModelFactory _model = new CourseModelFactory
+                        (course.Code,course.Name,
+                        course.Description,course.Duration,
+                        course.TypeCourse, course.Mode, 
+                        course.Level,course.Video_preview,
+                        course.ProfessorID);
+                    listModel.Add(_model);
+                }
+
+                return courseResponses = new CourseResponses(listModel,true,"Traidos los cursos",1);
             }
             catch (Exception e)
             {
 
-                return returnCoursesResponse(0, false, string.Format("Error en la peticion  -> {0}",e.Message));
+                return courseResponses = new CourseResponses(null, false, "Error en la petición -> "+e.Message);
 
             }
 
@@ -79,16 +72,16 @@ namespace BackCodigoInteractivo.Repositories
 
         public CourseResponse storeCourse (PCourse _pcourse)
         {
-            if (_pcourse == null) return returnCourseResponse(0,false,"Está vacia a peticion");
+            if (_pcourse == null) return _courseR = new CourseResponse(null, false, " El curso está vacio");
 
             if (GetCourse(_pcourse.code) != null)
             {
                 if (_pcourse.code == 0)
                 {
-                    return returnCourseResponse(0, false, "El curso debe tener un CODE y este ser diferente de 0");
+                    return _courseR = new CourseResponse(null, false, " El curso debe tener un codigo y ser diferente de 0");
                 }
 
-                return returnCourseResponse(0, false, "El curso con este code ya existe, por favor intentar otro codigo");
+                return _courseR = new CourseResponse(null, false, " El curso con este codigo ya existe, debe cambiarlo");
             }
 
             Course _course = new Course();
@@ -101,15 +94,15 @@ namespace BackCodigoInteractivo.Repositories
                     {
                     if (!base64Upload(_pcourse.imageBase64,_pcourse.thumbnail))
                     {
-                        return returnCourseResponse(0, false, "Error de guardado de imagen");
-                    }
+                            return _courseR = new CourseResponse(null, false, " Error guardando la imagen");
+                        }
 
-                }
+                    }
                 catch (Exception e)
                 {
 
-                    return returnCourseResponse(0, false, "Error de guardado de imagen -> " + e.Message);
-                }
+                        return _courseR = new CourseResponse(null, false, "Error en la petición -> " + e.Message);
+                    }
 
 
                 }
@@ -127,41 +120,69 @@ namespace BackCodigoInteractivo.Repositories
 
                 ctx.Courses.Add(_course);
                 ctx.SaveChanges();
+
+                CourseModelFactory _modelFactory = new CourseModelFactory
+                        (_course.Code, _course.Name,
+                        _course.Description, _course.Duration,
+                        _course.TypeCourse, _course.Mode,
+                        _course.Level, _course.Video_preview,
+                        _course.ProfessorID);
+                return _courseR = new CourseResponse(_modelFactory, true, "Correctamente guardado", 1);
+
             }
-            catch (Exception)
+            catch (Exception e)
             {
 
-                return returnCourseResponse(0, false, "Ocurrió un error");
+                return _courseR = new CourseResponse(null, false, "Error en la petición -> " + e.Message, 0);
             }
 
-            return returnCourseResponse(1,true,"Creado correctamente", _course);
 
         }
 
 
         public CourseResponse detailCourse(int code)
         {
-            if ( code == 0) return returnCourseResponse(0, false, "Está vacia la peticion"); //Si el code es 0, devolverá la peticion inexistente.
+            CourseResponse courseResponse;
 
-            Course _course = ctx.Courses.Where(x => x.Code == code).FirstOrDefault();  //Search if there is some Course with that code.
+            CourseModelFactory _cfactory;
 
-            if (_course == null) return returnCourseResponse(0, false, "El code no es de un curso existente"); // If there isnt course, so I return json with message error.
+            try
+            {
+                if (code == 0) return courseResponse = new CourseResponse(null,false,"El codigo no puede ser igual a 0"); //Si el code es 0, devolverá la peticion inexistente.
 
-            ICollection<Class_Course> _classes = ctx.Classes.Where(x => x.CourseID == _course.CourseID).ToList();
+                Course _course = ctx.Courses.Where(x => x.Code == code).FirstOrDefault();  //Search if there is some Course with that code.
 
-            return returnCourseResponse(1, true, "El codigo existe", _course,_classes);
-            
+                if (_course == null) return courseResponse = new CourseResponse(null, false, "No existe codigo con ese numero"); // If there isnt course, so I return json with message error.
+
+                _cfactory = new CourseModelFactory
+                        (_course.Code, _course.Name,
+                        _course.Description, _course.Duration,
+                        _course.TypeCourse, _course.Mode,
+                        _course.Level, _course.Video_preview,
+                        _course.ProfessorID);
+
+                return courseResponse = new CourseResponse(_cfactory,true,"Correctamente traido",1);
+
+            }
+            catch (Exception e)
+            {
+
+                return courseResponse = new CourseResponse(null, false, string.Format("Error en la petición -> {0}",e.Message));
+
+            }
         }
 
 
         public CourseResponse putCourse(int code,PCourse _pcourse)
         {
-            
-            if (_pcourse == null && code == 0) return returnCourseResponse(0, false, "Está vacia la peticion"); //Si el code es 0 y la peticion vacia.
+            CourseResponse courseResponse;
+
+            if (_pcourse == null || code == 0) return courseResponse = new CourseResponse(null, false, string.Format("Error en la petición"));
+
 
             Course _course = ctx.Courses.Where(x => x.Code == code).FirstOrDefault();  //Search if there is some Course with that code.
 
-            if (_course == null) return returnCourseResponse(0, false, "El code no es de un curso existente"); // If there isnt code, so I return json with message error.
+            if (_course == null) return courseResponse = new CourseResponse(null, false, "No existe ningun curso con ese code", 0);
 
 
             try
@@ -172,14 +193,14 @@ namespace BackCodigoInteractivo.Repositories
                     {
                         if (!base64Upload(_pcourse.imageBase64, _pcourse.thumbnail))
                         {
-                            return returnCourseResponse(0, false, "Error de guardado de imagen");
+                            return courseResponse = new CourseResponse(null, false, "Error guardando la imagen", 0);
                         }
 
                     }
                     catch (Exception e)
                     {
 
-                        return returnCourseResponse(0, false, "Error de guardado de imagen -> " + e.Message);
+                        return courseResponse = new CourseResponse(null, false, "Error en la petición -> " + e.Message, 0);
                     }
 
                 }
@@ -197,14 +218,22 @@ namespace BackCodigoInteractivo.Repositories
 
                 ctx.Entry(_course).State = System.Data.Entity.EntityState.Modified;
                 ctx.SaveChanges();
+
+                CourseModelFactory _modelFactory = new CourseModelFactory
+                        (_course.Code, _course.Name,
+                        _course.Description, _course.Duration,
+                        _course.TypeCourse, _course.Mode,
+                        _course.Level, _course.Video_preview,
+                        _course.ProfessorID);
+                return courseResponse = new CourseResponse(_modelFactory, true, "Correctamente guardado",1);
+
             }
-            catch (Exception)
+            catch (Exception e)
             {
 
-                return returnCourseResponse(0, false, "Ocurrió un error en la actualización");
+                return courseResponse = new CourseResponse(null, false, "Error en la petición -> " + e.Message);
             }
 
-            return returnCourseResponse(1, true, "Creado correctamente", _course);
 
         }
 
@@ -212,21 +241,22 @@ namespace BackCodigoInteractivo.Repositories
         public CourseResponse deleteCourse(int code)
         {
             Course _course = ctx.Courses.Where(x => x.Code == code).FirstOrDefault();
-
-            if (_course == null) return returnCourseResponse(0,false,"No existe ningun curso con ese codigo");
+            CourseResponse _cresponse;
+            if (_course == null) return _cresponse = new CourseResponse(null,false,"No existe ningun curso con ese code",0);
 
             try
             {
                 string name = _course.Name;
                 ctx.Courses.Remove(_course);
                 ctx.SaveChanges();
-                return returnCourseResponse(1,true,"Curso eliminado " +name+ " correctamente");
+
+                return _cresponse = new CourseResponse(null,true,"Eliminado correctamente "+name ,1);
             }
             catch (Exception e)
             {
 
                 System.Diagnostics.Debug.WriteLine(e.Message);
-                return returnCourseResponse(0,false,"Ocurrio un error al eliminar");
+                return _cresponse = new CourseResponse(null,false,string.Format("Error en la petición -> {0}",e));
             }
         }
         public bool base64Upload(string _b64,string imgName)

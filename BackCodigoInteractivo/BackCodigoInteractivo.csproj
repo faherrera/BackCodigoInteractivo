@@ -214,14 +214,15 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
-    <Compile Include="ModelsFactory\CourseModelFactory.cs" />
     <Compile Include="ModelsFactory\RoleModelFactory.cs" />
     <Compile Include="ModelsFactory\UserModelFactory.cs" />
     <Compile Include="ModelsNotMapped\ClassesCourse\ModelFactory\ClassesModelFactory.cs" />
     <Compile Include="ModelsNotMapped\ClassesCourse\Responses\ClassesCourse.cs" />
+    <Compile Include="ModelsNotMapped\Courses\ModelFactory\CourseModelFactory.cs" />
     <Compile Include="ModelsNotMapped\Courses\Requests\PCourse.cs" />
     <Compile Include="ModelsNotMapped\Courses\Responses\CourseResponse.cs" />
     <Compile Include="ModelsNotMapped\Courses\Responses\CoursesResponse.cs" />
+    <Compile Include="ModelsNotMapped\Inheritance\Responses\Base.cs" />
     <Compile Include="ModelsNotMapped\ResourcesClasses\Responses\ResClass.cs" />
     <Compile Include="ModelsNotMapped\Roles\Responses\Responses.cs" />
     <Compile Include="ModelsNotMapped\TokenReceived.cs" />
