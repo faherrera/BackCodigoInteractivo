@@ -38,7 +38,7 @@ namespace BackCodigoInteractivo.Repositories
 
                 foreach (var clase in _cl)
                 {
-                    ClassesModelFactory claseFactory = new ClassesModelFactory(clase.CodeClass,clase.TitleClass,clase.PathVideo,clase.ExternalLink,clase.CourseID);
+                    ClassesModelFactory claseFactory = new ClassesModelFactory(clase.CodeClass,clase.TitleClass,clase.PathVideo,clase.Description,clase.CourseID);
                     _classes.Add(claseFactory);
                 } 
 
@@ -68,7 +68,7 @@ namespace BackCodigoInteractivo.Repositories
 
             _cc = ctx.Classes.Where(x=> x.CodeClass == code).FirstOrDefault();
 
-            ClassesModelFactory modelFactory = new ClassesModelFactory(_cc.CodeClass,_cc.TitleClass,_cc.PathVideo,_cc.ExternalLink,_cc.CourseID);
+            ClassesModelFactory modelFactory = new ClassesModelFactory(_cc.CodeClass,_cc.TitleClass,_cc.PathVideo,_cc.Description,_cc.CourseID);
 
             return _cr = new ClassResponse(modelFactory,true,"Clase traida correctamente",1);
 
@@ -89,7 +89,7 @@ namespace BackCodigoInteractivo.Repositories
                 ctx.Classes.Add(_classCourse);
                 ctx.SaveChanges();
 
-                var model = new ClassesModelFactory(_classCourse.CodeClass,_classCourse.TitleClass,_classCourse.PathVideo,_classCourse.ExternalLink,_classCourse.CourseID);
+                var model = new ClassesModelFactory(_classCourse.CodeClass,_classCourse.TitleClass,_classCourse.PathVideo,_classCourse.Description,_classCourse.CourseID);
                 return _cr = new ClassResponse(model,true,"Cargado correctamente la clase",1);
             }
             catch (Exception e)
@@ -112,16 +112,21 @@ namespace BackCodigoInteractivo.Repositories
 
             Class_Course _classOriginal = ctx.Classes.Where(x => x.CodeClass == code).FirstOrDefault();
 
-            _classOriginal.CourseID = _classModified.CourseID;
             _classOriginal.PathVideo = _classModified.PathVideo;
             _classOriginal.TitleClass = _classModified.TitleClass;
+            _classOriginal.PathVideo = _classModified.PathVideo;
+            _classOriginal.Description = _classModified.Description;
+            _classOriginal.CourseID = _classModified.CourseID;  //ID del curso del cual depende.
+
+
+
 
             try
             {
                 ctx.Entry(_classOriginal).State = System.Data.Entity.EntityState.Modified;
                 ctx.SaveChanges();
 
-                ClassesModelFactory _classModel = new ClassesModelFactory(_classOriginal.CodeClass,_classOriginal.TitleClass,_classOriginal.PathVideo,_classOriginal.ExternalLink,_classOriginal.CourseID);
+                ClassesModelFactory _classModel = new ClassesModelFactory(_classOriginal.CodeClass,_classOriginal.TitleClass,_classOriginal.PathVideo,_classOriginal.Description,_classOriginal.CourseID);
                 return _cr = new ClassResponse(_classModel, true, "Clase actualizada correctamente", 1);
 
             }
@@ -183,6 +188,26 @@ namespace BackCodigoInteractivo.Repositories
         public bool hasChildren(int id)
         {
             return ctx.Resources.Any(x => x.Class_CourseID == id);
+        }
+
+        public ClassesResponse getAllResourcesFromCourseCode(int code) {
+
+            ClassesResponse classResponse;
+            List<ClassesModelFactory> modelFactoryList = new List<ClassesModelFactory>();
+
+            ClassesModelFactory modelFactory = null;
+
+            var listClasses = ctx.Classes.Where(x => x.CourseID == code).ToList();
+
+            foreach (var cla in listClasses)
+            {
+                modelFactory = new ClassesModelFactory(cla.CodeClass,cla.TitleClass,cla.PathVideo,cla.Description,cla.CourseID);
+
+                modelFactoryList.Add(modelFactory);    
+            }
+           
+
+            return classResponse = new ClassesResponse(modelFactoryList,true,"Traidos los datos",1);
         }
     }
 }

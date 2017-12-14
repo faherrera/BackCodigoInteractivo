@@ -18,7 +18,7 @@ namespace BackCodigoInteractivo.ModelsNotMapped.Courses.ModelFactory
 
         public CourseModelFactory() { }
 
-        public CourseModelFactory(int code, string name,string description,string duration, TypesCourseEnum type, ModeEnum mode, LevelEnum level, string video, int? profesorCode)
+        public CourseModelFactory(int code, string name,string description,string duration, TypesCourseEnum type, ModeEnum mode, LevelEnum level, string video, string thumb,int? profesorCode)
         {
             this.Code = code;
             this.Name = name;
@@ -28,6 +28,7 @@ namespace BackCodigoInteractivo.ModelsNotMapped.Courses.ModelFactory
             this.Level = level;
             this.TypeCourse = type;
             this.Video_preview = video;
+            this.Thumbnail = thumb;
             this.ProfessorID = profesorCode;
             this.Classes = ctx.Classes.Where(x => x.CourseID == code).ToList();
         }

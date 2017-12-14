@@ -13,12 +13,12 @@ namespace BackCodigoInteractivo.ModelsNotMapped.ClassesCourse.ModelFactory
 
         public ClassesModelFactory() { }
 
-        public ClassesModelFactory(int code, String title, string path, string external, int codeCourse)
+        public ClassesModelFactory(int code, String title, string path, string description, int codeCourse)
         {
             this.CodeClass = code;
             this.TitleClass = title;
             this.PathVideo = path;
-            this.ExternalLink = external;
+            this.Description = description;
             this.CourseID = codeCourse;
             this.Course = ctx.Courses.Where(x => x.Code == codeCourse).FirstOrDefault();
             this.Resources = ctx.Resources.Where(x => x.Class_CourseID == code).ToList();
@@ -27,7 +27,7 @@ namespace BackCodigoInteractivo.ModelsNotMapped.ClassesCourse.ModelFactory
         public int CodeClass { get; set; }
         public String TitleClass { get; set; }
         public String PathVideo { get; set; }
-        public String ExternalLink { get; set; }
+        public String Description { get; set; }
         public int CourseID { get; set; }
         public Course Course { get; set; }
         public ICollection<Resource_class> Resources { get; set; }

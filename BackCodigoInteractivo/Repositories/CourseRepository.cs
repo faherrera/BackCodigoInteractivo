@@ -53,7 +53,7 @@ namespace BackCodigoInteractivo.Repositories
                         (course.Code,course.Name,
                         course.Description,course.Duration,
                         course.TypeCourse, course.Mode, 
-                        course.Level,course.Video_preview,
+                        course.Level,course.Video_preview,course.Thumbnail,
                         course.ProfessorID);
                     listModel.Add(_model);
                 }
@@ -124,7 +124,7 @@ namespace BackCodigoInteractivo.Repositories
                         (_course.Code, _course.Name,
                         _course.Description, _course.Duration,
                         _course.TypeCourse, _course.Mode,
-                        _course.Level, _course.Video_preview,
+                        _course.Level, _course.Video_preview,_course.Thumbnail,
                         _course.ProfessorID);
                 return _courseR = new CourseResponse(_modelFactory, true, "Correctamente guardado", 1);
 
@@ -158,6 +158,7 @@ namespace BackCodigoInteractivo.Repositories
                         _course.Description, _course.Duration,
                         _course.TypeCourse, _course.Mode,
                         _course.Level, _course.Video_preview,
+                        _course.Thumbnail,
                         _course.ProfessorID);
 
                 return courseResponse = new CourseResponse(_cfactory,true,"Correctamente traido",1);
@@ -222,7 +223,7 @@ namespace BackCodigoInteractivo.Repositories
                         (_course.Code, _course.Name,
                         _course.Description, _course.Duration,
                         _course.TypeCourse, _course.Mode,
-                        _course.Level, _course.Video_preview,
+                        _course.Level, _course.Video_preview,_course.Thumbnail,
                         _course.ProfessorID);
                 return courseResponse = new CourseResponse(_modelFactory, true, "Correctamente guardado",1);
 

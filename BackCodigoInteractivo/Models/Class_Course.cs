@@ -12,9 +12,10 @@ namespace BackCodigoInteractivo.Models
         [Key]
         public int Class_CourseID { get; set; }
         public int CodeClass { get; set; }
+        public string Description { get; set; }
         public String TitleClass { get; set; }
         public String PathVideo { get; set; }
-        public String ExternalLink { get; set; }
+        //public String ExternalLink { get; set; }
         public int CourseID { get; set; }  
 
     }

@@ -223,6 +223,7 @@
     <Compile Include="ModelsNotMapped\Courses\Requests\PCourse.cs" />
     <Compile Include="ModelsNotMapped\Courses\Responses\CourseResponse.cs" />
     <Compile Include="ModelsNotMapped\Inheritance\Responses\Base.cs" />
+    <Compile Include="ModelsNotMapped\ResourcesClasses\ModelFactory\ResourcesModelFactory.cs" />
     <Compile Include="ModelsNotMapped\ResourcesClasses\Responses\ResClass.cs" />
     <Compile Include="ModelsNotMapped\Roles\Responses\Responses.cs" />
     <Compile Include="ModelsNotMapped\TokenReceived.cs" />

@@ -44,6 +44,6 @@ namespace BackCodigoInteractivo.Controllers
         {
             return Json(cr.deleteClass(id));
         }
-
+        
     }
 }

@@ -17,10 +17,18 @@ namespace BackCodigoInteractivo
             // Rutas de API web
             config.MapHttpAttributeRoutes();
 
+            
+
             config.Routes.MapHttpRoute(
                 name: "DefaultApi",
                 routeTemplate: "api/{controller}/{id}",
                 defaults: new { id = RouteParameter.Optional }
+            );
+
+            config.Routes.MapHttpRoute(
+                name: "GetListFromCode",
+                routeTemplate: "api/{controller}/{code}/{list}",
+                defaults: new { code = RouteParameter.Optional, list = RouteParameter.Optional }
             );
 
             config.Formatters.Remove(config.Formatters.XmlFormatter);

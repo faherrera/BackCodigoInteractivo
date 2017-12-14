@@ -1,4 +1,6 @@
 ﻿using BackCodigoInteractivo.Models;
+using BackCodigoInteractivo.ModelsNotMapped.Inheritance.Responses;
+using BackCodigoInteractivo.ModelsNotMapped.ResourcesClasses.ModelFactory;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,39 +8,33 @@ using System.Web;
 
 namespace BackCodigoInteractivo.ModelsNotMapped.ResourcesClasses.Responses
 {
-    public class ResClassesResponse
+    public class ResClassesResponse : BaseResponse
     {
         public ResClassesResponse() { }
 
-        public ResClassesResponse(Resource_class _rclass, bool _status = false, string _message = "Error en la clase", int _codeState = 0)
+        public ResClassesResponse(ResourcesModelFactory _rclass, bool _status = false, string _message = "Error en la clase", int _codeState = 0)
         {
-            this._status = _status;
-            this._message = _message;
-            this._codeState = _codeState;
-            this._rclass = _rclass;
+            this.status = _status;
+            this.message = _message;
+            this.codeState = _codeState;
+            this.data = _rclass;
         }
 
-        public bool _status { get; set; }
-        public string _message { get; set; }
-        public int _codeState { get; set; }
-        public Resource_class _rclass { get; set; }
     }
 
-    public class ListResClassResponse
+    public class ListResClassResponse : BaseResponses
     {
         public ListResClassResponse() { }
 
-        public ListResClassResponse(ICollection<Resource_class> _rclasses, bool _status = false, string _message = "Error en la clase", int _codeState = 0)
+        public ListResClassResponse(ICollection<ResourcesModelFactory> _rclasses, bool _status = false, string _message = "Error en la clase", int _codeState = 0)
         {
-            this._status = _status;
-            this._message = _message;
-            this._codeState = _codeState;
-            this._rclasses = _rclasses;
+            this.status = _status;
+            this.message = _message;
+            this.codeState = _codeState;
+            this.data = _rclasses;
         }
 
-        public bool _status { get; set; }
-        public string _message { get; set; }
-        public int _codeState { get; set; }
-        public ICollection<Resource_class> _rclasses { get; set; }
+       
+        public ICollection<ResourcesModelFactory> data { get; set; }
     }
 }

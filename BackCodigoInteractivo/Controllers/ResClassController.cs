@@ -11,9 +11,12 @@ using System.Web.Http.Description;
 using BackCodigoInteractivo.DAL;
 using BackCodigoInteractivo.Models;
 using BackCodigoInteractivo.Repositories;
+using System.Web.Http.Cors;
 
 namespace BackCodigoInteractivo.Controllers
 {
+    [EnableCors(origins: "*", headers: "*", methods: "GET, POST, PUT, DELETE")]
+
     public class ResClassController : ApiController
     {
         private ResClassRepository _rcr = new ResClassRepository();
