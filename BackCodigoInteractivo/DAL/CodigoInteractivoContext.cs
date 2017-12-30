@@ -14,5 +14,6 @@ namespace BackCodigoInteractivo.DAL
         public DbSet<Resource_class> Resources { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Role> Roles { get; set; }
+        public DbSet<User_Course> UsersCourses { get; set; }
     }
 }

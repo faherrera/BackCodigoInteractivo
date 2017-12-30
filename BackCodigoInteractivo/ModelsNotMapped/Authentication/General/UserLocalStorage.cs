@@ -3,20 +3,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace BackCodigoInteractivo.ModelsNotMapped.Authentication.Login.Responses
+namespace BackCodigoInteractivo.ModelsNotMapped.Authentication.General
 {
-    public class UserLoginResponse
+    public class UserLocalStorage
     {
-        
-        public UserLoginResponse( string username , string email,string token)
+        public UserLocalStorage(string name,string username, string email, string token)
         {
+            this.Name = Name;
             this.Username = username;
             this.Email = email;
             this.Token = token;
         }
-        public string Username{ get; set; }
+        public string Name { get; set; }
+        public string Username { get; set; }
         public string Email { get; set; }
         public string Token { get; set; }
-
     }
 }

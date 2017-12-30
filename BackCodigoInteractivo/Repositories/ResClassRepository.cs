@@ -78,10 +78,11 @@ namespace BackCodigoInteractivo.Repositories
 
             if(_rclass == null) { return _rcr = new ResClassesResponse(null,false,"No puede estár nula la petición",0); }
 
-            if (busyResource(_rclass.CodeResource)) return _rcr = new ResClassesResponse(null,false,"El codigo ya está ocupado, no puede ser el mismo",2);
 
             try
             {
+                if (busyResource(_rclass.CodeResource)) return _rcr = new ResClassesResponse(null,false,"El codigo ya está ocupado, no puede ser el mismo",2);
+
                 ctx.Resources.Add(_rclass);
                 ctx.SaveChanges();
 
@@ -99,20 +100,22 @@ namespace BackCodigoInteractivo.Repositories
 
         public ResClassesResponse editResource(int code,Resource_class _rclass)
         {
-            ResClassesResponse _rcr;
-
-            if (!busyResource(code)) return _rcr = new ResClassesResponse(null,false,"No existe ningun recurso con ese codigo, por favor revisarlo",2);
-            
-            if(_rclass == null) return _rcr = _rcr = new ResClassesResponse(null, false, "La petición no puede ser nula");
-
-            Resource_class _original = ctx.Resources.Where(x => x.CodeResource == code).First();
-
-            _original.ExternalLink = _rclass.ExternalLink;
-            _original.TitleResource = _rclass.TitleResource;
-            _original.Class_CourseID = _rclass.Class_CourseID;
-
+                ResClassesResponse _rcr;
+         
             try
             {
+
+                if (!busyResource(code)) return _rcr = new ResClassesResponse(null, false, "No existe ningun recurso con ese codigo, por favor revisarlo", 2);
+
+                if (_rclass == null) return _rcr = _rcr = new ResClassesResponse(null, false, "La petición no puede ser nula");
+
+                Resource_class _original = ctx.Resources.Where(x => x.CodeResource == code).First();
+
+                _original.ExternalLink = _rclass.ExternalLink;
+                _original.TitleResource = _rclass.TitleResource;
+                _original.Class_CourseID = _rclass.Class_CourseID;
+
+
                 ctx.Entry(_original).State = System.Data.Entity.EntityState.Modified;
                 ctx.SaveChanges();
 

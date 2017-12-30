@@ -1,4 +1,5 @@
 ﻿using BackCodigoInteractivo.DAL;
+using BackCodigoInteractivo.Filters;
 using BackCodigoInteractivo.Models;
 using BackCodigoInteractivo.ModelsFactory;
 using BackCodigoInteractivo.ModelsNotMapped;
@@ -32,6 +33,8 @@ namespace BackCodigoInteractivo.Controllers
             return Json(cr.detailCourse(id));
 
         }
+        
+ 
 
         // POST: api/Courses
         public IHttpActionResult Post(PCourse _pcourse)

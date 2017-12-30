@@ -1,4 +1,5 @@
 ﻿using BackCodigoInteractivo.Models;
+using BackCodigoInteractivo.ModelsNotMapped.Authentication.General;
 using BackCodigoInteractivo.ModelsNotMapped.Authentication.Login.Responses;
 using System;
 using System.Collections.Generic;
@@ -10,7 +11,7 @@ namespace BackCodigoInteractivo.Repositories
     public class LoginRepository : AuthRepository
     {
         LoginResponse _loginResponse;
-        UserLoginResponse _userLoginResponse;  //This class has all props that we will return to User.
+        UserLocalStorage _userLoginResponse;  //This class has all props that we will return to User.
 
         public LoginRepository()
         {
@@ -31,7 +32,7 @@ namespace BackCodigoInteractivo.Repositories
 
                 if (!CredentialsLoginMatch(_user, userFromBody.Password)) return _loginResponse = new LoginResponse(null,false,"Las credenciales no coinciden, por favor revisarlas.",0);
 
-                _userLoginResponse = new UserLoginResponse(_user.Username,_user.Email,_user.Token);
+                _userLoginResponse = new UserLocalStorage(_user.Name,_user.Username,_user.Email,_user.Token);
 
                 return _loginResponse = new LoginResponse(_userLoginResponse,true,"Correctamente logueado",1);
 

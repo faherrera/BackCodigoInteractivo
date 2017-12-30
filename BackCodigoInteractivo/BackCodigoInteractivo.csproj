@@ -208,15 +208,21 @@
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\ResClassController.cs" />
     <Compile Include="Controllers\RolesController.cs" />
+    <Compile Include="Controllers\SignUpController.cs" />
+    <Compile Include="Controllers\UserCourseController.cs" />
     <Compile Include="Controllers\UserRegisterController.cs" />
     <Compile Include="DAL\CodigoInteractivoContext.cs" />
+    <Compile Include="Filters\CIAuthorizationAttribute.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="ModelsFactory\RoleModelFactory.cs" />
+    <Compile Include="ModelsNotMapped\Authentication\General\AuthenticationResponse.cs" />
+    <Compile Include="ModelsNotMapped\Authentication\General\UserLocalStorage.cs" />
     <Compile Include="ModelsNotMapped\Authentication\Login\Responses\LoginResponse.cs" />
-    <Compile Include="ModelsNotMapped\Authentication\Login\Responses\UserLoginResponse.cs" />
+    <Compile Include="ModelsNotMapped\Authentication\SignUp\Request\SignUpRequest.cs" />
+    <Compile Include="ModelsNotMapped\Authentication\SignUp\Responses\SignUpResponse.cs" />
     <Compile Include="ModelsNotMapped\ClassesCourse\ModelFactory\ClassesModelFactory.cs" />
     <Compile Include="ModelsNotMapped\ClassesCourse\Responses\ClassesCourse.cs" />
     <Compile Include="ModelsNotMapped\Courses\ModelFactory\CourseModelFactory.cs" />
@@ -228,13 +234,17 @@
     <Compile Include="ModelsNotMapped\Roles\Responses\Responses.cs" />
     <Compile Include="ModelsNotMapped\TokenReceived.cs" />
     <Compile Include="ModelsNotMapped\UserResponse.cs" />
+    <Compile Include="ModelsNotMapped\UsersCourses\ModelFactory\UserCourseModelFactory.cs" />
+    <Compile Include="ModelsNotMapped\UsersCourses\Responses\UsersCoursesResponse.cs" />
     <Compile Include="ModelsNotMapped\Users\Responses\Responses.cs" />
     <Compile Include="Models\Class_Course.cs" />
     <Compile Include="Models\Course.cs" />
     <Compile Include="Models\Resource_class.cs" />
     <Compile Include="Models\Role.cs" />
     <Compile Include="Models\User.cs" />
+    <Compile Include="Models\User_Course.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositories\AuthorizationToken.cs" />
     <Compile Include="Repositories\AuthRepository.cs" />
     <Compile Include="Repositories\ClassesRepository.cs" />
     <Compile Include="Repositories\CourseRepository.cs" />
@@ -243,6 +253,8 @@
     <Compile Include="Repositories\LoginRepository.cs" />
     <Compile Include="Repositories\ResClassRepository.cs" />
     <Compile Include="Repositories\RoleRepository.cs" />
+    <Compile Include="Repositories\SignUpRepository.cs" />
+    <Compile Include="Repositories\UserCourseRepository.cs" />
     <Compile Include="Repositories\UserRepository.cs" />
   </ItemGroup>
   <ItemGroup>
