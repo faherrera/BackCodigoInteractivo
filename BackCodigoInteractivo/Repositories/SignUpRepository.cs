@@ -3,6 +3,7 @@ using BackCodigoInteractivo.Models;
 using BackCodigoInteractivo.ModelsNotMapped.Authentication.General;
 using BackCodigoInteractivo.ModelsNotMapped.Authentication.SignUp.Request;
 using BackCodigoInteractivo.ModelsNotMapped.Authentication.SignUp.Responses;
+using BackCodigoInteractivo.Repositories.Configs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,7 +17,7 @@ namespace BackCodigoInteractivo.Repositories
         private SignUpResponse response = null;
         private AuthRepository auth = new AuthRepository(); //Uso sus metodos.
         private UserLocalStorage userLocalStorage = null;
-
+        private EncryptionsRepository encRepo = new EncryptionsRepository();
         public SignUpResponse processingSignup( SignUpRequest request)
         {
             try
@@ -69,7 +70,7 @@ namespace BackCodigoInteractivo.Repositories
             user.Username = request.Username;
             user.Name = request.Name;
             user.Email = request.Email;
-            user.Password = auth.Encrypting(request.Password); ///Debería llamar a un metodo que encripte la contraseña.
+            user.Password = encRepo.Encrypting(request.Password); ///Debería llamar a un metodo que encripte la contraseña.
             user.DNI = request.DNI;
 
             System.Diagnostics.Debug.WriteLine(request.Password);

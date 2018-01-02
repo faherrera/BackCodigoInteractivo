@@ -12,7 +12,7 @@ namespace BackCodigoInteractivo.ModelsNotMapped.Users.Responses
         public class UserResponse : BaseResponse
         {
             public UserResponse() { }
-            public UserResponse( String _message = " Error en la petición  ", int _codeState = 0, User _user = null, bool _status = false)
+            public UserResponse( String _message = " Error en la petición  ", int _codeState = 0, Object _user = null, bool _status = false)
             {
                 this.status = _status;
                 this.message = _message;

@@ -1,5 +1,6 @@
 ﻿using BackCodigoInteractivo.DAL;
 using BackCodigoInteractivo.Models;
+using BackCodigoInteractivo.ModelsNotMapped.Users.ModelFactory;
 using BackCodigoInteractivo.ModelsNotMapped.Users.Responses;
 using System;
 using System.Collections.Generic;
@@ -45,7 +46,7 @@ namespace BackCodigoInteractivo.Repositories
         //To controller
         public UsersResponse listUsers() {
            UsersResponse _usersRes;
-
+            UserModelFactory userModelFactory;
             try
             {
                 if (getAllUsers().Count() == 0)
@@ -69,14 +70,14 @@ namespace BackCodigoInteractivo.Repositories
         public UserResponse detailUser(int id)
         {
             UserResponse _userRes;
-
+            UserModelFactory userModel;
             try
             {
                 User _us = getUserById(id);
 
                 if (_us == null) return _userRes = new UserResponse("No existe el usuario con ese ID",2);
 
-                return _userRes = new UserResponse("User traido correctamente",1,_us,true);
+                return _userRes = new UserResponse("User traido correctamente",1,userModel = new UserModelFactory(_us.UserID,_us.DNI,_us.Name,_us.Email,_us.Username),true);
             }
             catch (Exception e)
             {

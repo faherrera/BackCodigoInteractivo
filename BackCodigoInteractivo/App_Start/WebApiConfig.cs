@@ -20,9 +20,11 @@ namespace BackCodigoInteractivo
 
             config.Routes.MapHttpRoute(
                 name: "UserCourseApi",
-                routeTemplate: "api/UserCourse/{Username}",
-                defaults: new { Username = RouteParameter.Optional }
+                routeTemplate: "api/UserCourse/{username}",
+                defaults: new { controller = "UserCourse", action = "Get", username = RouteParameter.Optional }
             );
+
+            //config.Routes.MapHttpRoute("UserCourseAPI","api/UserCourse/{username}",new { controller = "UserCourse",action= "Get", username = RouteParameter.Optional});
 
             config.Routes.MapHttpRoute(
                 name: "DefaultApi",

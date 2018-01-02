@@ -10,12 +10,14 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Web;
 using System.Web.Http.Cors;
+using BackCodigoInteractivo.Repositories.Configs;
 
 namespace BackCodigoInteractivo.Repositories
 {
     public class AuthRepository
     {
         protected CodigoInteractivoContext ctx = new CodigoInteractivoContext();
+        private EncryptionsRepository enc = new EncryptionsRepository();
 
 
         //Getters
@@ -59,82 +61,10 @@ namespace BackCodigoInteractivo.Repositories
 
         }
 
-        //Credentials
-
-        public bool CredentialsLoginMatch( User user, string password)
-        {
-            try
-            {
-                string EncrypPass = Encrypting(password);
-                if (user == null) return false;
-
-                if (user.Password != EncrypPass)
-                {
-                    return false;
-                }
-
-                return true;
-
-            }
-            catch (Exception)
-            {
-                return false;
-            }
-        }
-
-        //TOKENS
         
-        public AuthenticationResponse haveTokenAuth(HttpRequestMessage request)
-        {
-            AuthenticationResponse authResponse = new AuthenticationResponse();
 
-            string searchInHeader = "Token";
-
-            if (!request.Headers.Contains(searchInHeader)) //Si el Header no trae el Token 
-            {
-                return authResponse;     
-            }
-
-            string Token = request.Headers.GetValues(searchInHeader).FirstOrDefault();
-
-            if (string.IsNullOrEmpty(Token)) return authResponse; //Devuelvo False si está vacio.
-
-            if (!AlreadyExistForToken(Token)) return authResponse; //Devuelvo False si no existe el token
-
-           
-
-            return authResponse = new AuthenticationResponse(true,Token);    //Devuelvo true y sigo la petición.
-            
-        }
-
-
-        public AuthenticationResponse haveTokenAuth2(string Token)
-        {
-            AuthenticationResponse authResponse = new AuthenticationResponse();
-
-
-            if (string.IsNullOrEmpty(Token)) return authResponse; //Devuelvo False si está vacio.
-
-            if (!AlreadyExistForToken(Token)) return authResponse; //Devuelvo False si no existe el token
-
-
-
-            return authResponse = new AuthenticationResponse(true, Token);    //Devuelvo true y sigo la petición.
-
-        }
-
-
-
-        public string Encrypting(string pass)
-        {
-            SHA1 sha1 = new SHA1CryptoServiceProvider();
-
-            byte[] inputBytes = (new UnicodeEncoding()).GetBytes(pass);
-            byte[] hash = sha1.ComputeHash(inputBytes);
-
-            return Convert.ToBase64String(hash);
-
-        }
+       
+       
 
     }
 }

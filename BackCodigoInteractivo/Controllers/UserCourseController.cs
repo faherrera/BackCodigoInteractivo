@@ -1,4 +1,6 @@
-﻿using BackCodigoInteractivo.Models;
+﻿using BackCodigoInteractivo.Filters;
+using BackCodigoInteractivo.Models;
+using BackCodigoInteractivo.ModelsNotMapped.UsersCourses.Request;
 using BackCodigoInteractivo.ModelsNotMapped.UsersCourses.Responses;
 using BackCodigoInteractivo.Repositories;
 using System;
@@ -10,13 +12,10 @@ using System.Web.Http;
 
 namespace BackCodigoInteractivo.Controllers
 {
-    //[AuthorizationToken]
-
     public class UserCourseController : ApiController
     {
         UserCourseRepository userCourseRepo = new UserCourseRepository();
         AuthRepository authRepo = new AuthRepository();
-        UsersCoursesResponse usersCoursesResponse;
         
 
         // GET: api/UserCourse
@@ -33,9 +32,9 @@ namespace BackCodigoInteractivo.Controllers
         /// <returns></returns>
         // GET: api/UserCourse/Username
         [HttpGet]
-        public IHttpActionResult Get(HttpRequestMessage request,string username)
+        public IHttpActionResult Get(string username)
         {
-            return Json(userCourseRepo.ListAllCoursesForEachUser(request,username));
+            return Json(userCourseRepo.ListAllCoursesForEachUser(username));
         }
         // GET: api/UserCourse/5
         public IHttpActionResult Get(HttpRequestMessage request,int id)
@@ -44,9 +43,9 @@ namespace BackCodigoInteractivo.Controllers
         }
 
         // POST: api/UserCourse
-        public IHttpActionResult Post(HttpRequestMessage request, User_Course userCourse)
+        public IHttpActionResult Post(LinkUserCourseRequest userCourseRequest)
         {
-            return Json(userCourseRepo.linkUserAndCourse(request,userCourse));
+            return Json(userCourseRepo.linkUserAndCourse(userCourseRequest));
         }
 
         // PUT: api/UserCourse/5

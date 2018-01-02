@@ -2,7 +2,10 @@
 using BackCodigoInteractivo.Models;
 using BackCodigoInteractivo.ModelsNotMapped.Authentication.General;
 using BackCodigoInteractivo.ModelsNotMapped.UsersCourses.ModelFactory;
+using BackCodigoInteractivo.ModelsNotMapped.UsersCourses.Request;
 using BackCodigoInteractivo.ModelsNotMapped.UsersCourses.Responses;
+using BackCodigoInteractivo.Repositories.Courses;
+using BackCodigoInteractivo.Repositories.UserCourse;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,22 +17,15 @@ namespace BackCodigoInteractivo.Repositories
     public class UserCourseRepository
     {
         CodigoInteractivoContext ctx = new CodigoInteractivoContext();
-        AuthRepository authRepo;
+        AuthRepository authRepo = new AuthRepository();
         UsersCoursesResponse userCourseResponse = new UsersCoursesResponse();
         ListUsersCoursesResponse listUserCourseResponse = new ListUsersCoursesResponse();
+        ValidationUserCourseRepository validationUserCourse = new ValidationUserCourseRepository();
 
         UserCourseModelFactory userCourseModelFactory = new UserCourseModelFactory();
 
-        User user;
-        Course course; 
-
-        public UserCourseRepository()
-        {
-            user = new User();
-            authRepo = new AuthRepository();
-             
-        }
-
+        User user = new User();
+        
 
         public List<UserCourseModelFactory> ListingCoursesAccordingTo(int UserID)
         {
@@ -47,14 +43,10 @@ namespace BackCodigoInteractivo.Repositories
             return listUserModelFactory;
         }
 
-        public ListUsersCoursesResponse ListAllCoursesForEachUser(HttpRequestMessage request,string Username) {
+        public ListUsersCoursesResponse ListAllCoursesForEachUser(string Username) {
 
             try
             {
-                var authToken = authRepo.haveTokenAuth(request);
-
-                if (!authToken.status) { return listUserCourseResponse = new ListUsersCoursesResponse("No posee los permisos para generar esta solicitud", 401); }
-
                 if (String.IsNullOrWhiteSpace(Username)) return listUserCourseResponse = new ListUsersCoursesResponse("La petición debe contener un Username valido", 2);
 
                 var user = ctx.Users.Where(x => x.Username == Username).FirstOrDefault();
@@ -77,10 +69,6 @@ namespace BackCodigoInteractivo.Repositories
         {
             try
             {
-                var authToken = authRepo.haveTokenAuth(request);
-
-                if (!authToken.status) { return userCourseResponse = new UsersCoursesResponse("No posee los permisos para generar esta solicitud", 401); }
-
                 if (UserCourseID == 0) { return userCourseResponse = new UsersCoursesResponse("Debe ingresar un codigo para la solicitud", 0); }
 
                 var userCourse = ctx.UsersCourses.Find(UserCourseID);
@@ -101,18 +89,22 @@ namespace BackCodigoInteractivo.Repositories
         }
 
         //Eso será via Post desde el controller
-        public UsersCoursesResponse linkUserAndCourse(HttpRequestMessage request , User_Course userCourse)
+        public UsersCoursesResponse linkUserAndCourse(LinkUserCourseRequest userCourseRequest)
         {
             try
             {
-                var authToken = authRepo.haveTokenAuth(request);
-                if (!authToken.status){ return userCourseResponse = new UsersCoursesResponse("No posee los permisos para generar esta solicitud", 401); }
+                if(!validationUserCourse.existUserAndCourse(userCourseRequest)) return userCourseResponse = new UsersCoursesResponse("La petición debe contener usuario y curso existentes ");
 
-                var userAndCourse = searchUserAndCourse(authToken.token,userCourse.CourseID);
+                UserAndCourse userAndCourse = new UserAndCourse(userCourseRequest.Username,userCourseRequest.CourseCode);
 
-                userCourse.UserID = userAndCourse.user.UserID;
+                User_Course _userCourse = new User_Course();
 
-                ctx.UsersCourses.Add(userCourse);
+                _userCourse.UserID = userAndCourse.user.UserID;
+                _userCourse.CourseID = userAndCourse.course.Code;
+                _userCourse.Access = userCourseRequest.Access;
+                _userCourse.isInstructor = userCourseRequest.isInstructor;
+                 
+                ctx.UsersCourses.Add(_userCourse);
                 ctx.SaveChanges();
 
                 //Retorno el response satisfactorio.
@@ -130,15 +122,8 @@ namespace BackCodigoInteractivo.Repositories
 
         }
 
-        public UserCourseResponse searchUserAndCourse(string TokenUser, int codeCourse) {
-            user = authRepo.getUserFromToken(TokenUser);
+        
 
-            course = ctx.Courses.Where(x=> x.Code == codeCourse).FirstOrDefault();
-
-
-            UserCourseResponse response = new UserCourseResponse(user,course);
-                
-            return response;
-        }
+        
     }
 }
