@@ -65,7 +65,7 @@ namespace BackCodigoInteractivo.Repositories
 
         }
 
-        public UsersCoursesResponse detailUserCourse(HttpRequestMessage request, int UserCourseID)
+        public UsersCoursesResponse detailUserCourse(int UserCourseID)
         {
             try
             {

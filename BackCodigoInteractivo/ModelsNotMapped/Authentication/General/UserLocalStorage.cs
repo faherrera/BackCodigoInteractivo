@@ -9,7 +9,7 @@ namespace BackCodigoInteractivo.ModelsNotMapped.Authentication.General
     {
         public UserLocalStorage(string name,string username, string email, string token)
         {
-            this.Name = Name;
+            this.Name = name;
             this.Username = username;
             this.Email = email;
             this.Token = token;

@@ -17,20 +17,27 @@ namespace BackCodigoInteractivo
             // Rutas de API web
             config.MapHttpAttributeRoutes();
 
+            config.Routes.MapHttpRoute(
+                name: "UserCourseApiDefault",
+                routeTemplate: "api/UserCourse/{id}",
+                defaults: new { controller = "UserCourse", action = "GetID", id = RouteParameter.Optional }
+            );
 
             config.Routes.MapHttpRoute(
                 name: "UserCourseApi",
                 routeTemplate: "api/UserCourse/{username}",
-                defaults: new { controller = "UserCourse", action = "Get", username = RouteParameter.Optional }
+                defaults: new { controller = "UserCourse", action = "GetFromUsername", username = RouteParameter.Optional }
             );
 
-            //config.Routes.MapHttpRoute("UserCourseAPI","api/UserCourse/{username}",new { controller = "UserCourse",action= "Get", username = RouteParameter.Optional});
+            
 
             config.Routes.MapHttpRoute(
                 name: "DefaultApi",
                 routeTemplate: "api/{controller}/{id}",
                 defaults: new { id = RouteParameter.Optional }
             );
+
+            //config.Routes.MapHttpRoute("UserCourseAPI","api/UserCourse/{username}",new { controller = "UserCourse",action= "Get", username = RouteParameter.Optional});
 
 
             config.Formatters.Remove(config.Formatters.XmlFormatter);

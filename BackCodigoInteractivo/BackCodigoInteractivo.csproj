@@ -217,6 +217,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="ModelsFactory\Courses\CoursesModelFactory.cs" />
     <Compile Include="ModelsFactory\RoleModelFactory.cs" />
     <Compile Include="ModelsNotMapped\Authentication\General\AuthenticationResponse.cs" />
     <Compile Include="ModelsNotMapped\Authentication\General\UserLocalStorage.cs" />

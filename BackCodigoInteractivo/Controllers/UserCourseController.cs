@@ -9,9 +9,11 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using System.Web.Http.Cors;
 
 namespace BackCodigoInteractivo.Controllers
 {
+    [EnableCors(origins: "*", headers: "*", methods: "*")]
     public class UserCourseController : ApiController
     {
         UserCourseRepository userCourseRepo = new UserCourseRepository();
@@ -23,7 +25,7 @@ namespace BackCodigoInteractivo.Controllers
         {
             return new string[] { "value1", "value2" };
         }
-        
+
         /// <summary>
         /// Este metodo retorna todos los cursos a los que pertenece determinado usuario.
         /// Es decir, a todos los UserCourse donde UserID sea igual al del Username solicitado.
@@ -32,14 +34,16 @@ namespace BackCodigoInteractivo.Controllers
         /// <returns></returns>
         // GET: api/UserCourse/Username
         [HttpGet]
-        public IHttpActionResult Get(string username)
+        public IHttpActionResult GetFromUsername(string username)
         {
+
             return Json(userCourseRepo.ListAllCoursesForEachUser(username));
         }
         // GET: api/UserCourse/5
-        public IHttpActionResult Get(HttpRequestMessage request,int id)
+        public IHttpActionResult GetID(int id)
         {
-            return Json(userCourseRepo.detailUserCourse(request, id));
+
+            return Json(userCourseRepo.detailUserCourse(id));
         }
 
         // POST: api/UserCourse
