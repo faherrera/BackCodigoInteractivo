@@ -32,7 +32,7 @@ namespace BackCodigoInteractivo.Controllers
         /// </summary>
         /// <param name="username"></param>
         /// <returns></returns>
-        // GET: api/UserCourse/Username
+        // GET: api/UserCourse/?username="someUsername"
         [HttpGet]
         public IHttpActionResult GetFromUsername(string username)
         {
