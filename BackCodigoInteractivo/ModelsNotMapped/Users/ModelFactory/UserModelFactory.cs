@@ -6,33 +6,25 @@ using System.Web;
 
 namespace BackCodigoInteractivo.ModelsNotMapped.Users.ModelFactory
 {
-    
-
     public class UserModelFactory
     {
         private CodigoInteractivoContext ctx = new CodigoInteractivoContext();
 
-        public UserModelFactory()
+        public UserModelFactory(int UserID,string user,string Name, string Email, string Path,int? RolID)
         {
-
+            this.UserID = UserID;
+            this.Name = Name;
+            Username = user;
+            this.Email = Email;
+            PathProfileImage = Path;
+            this.RolID = ctx.Roles.Find(RolID).Title;
         }
-
-        public UserModelFactory(int UserID,string dni,string name, string email,string username)
-        {
-            MyCourse my = new MyCourse();
-
-            DNI = dni;
-            Name = name;
-            Email = email;
-            Username = username;
-            Courses = my.getAllCourses(UserID);
-        }
-
-        public string DNI { get; set; }
+        public int UserID { get; set; }
         public string Name { get; set; }
         public string Email { get; set; }
+        public string PathProfileImage { get; set; }
         public string Username { get; set; }
-        public List<MyCourse> Courses { get; set; }
+        public string RolID { get; set; }
     }
 
 }

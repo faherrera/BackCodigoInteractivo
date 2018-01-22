@@ -1,5 +1,6 @@
 ﻿using BackCodigoInteractivo.Models;
 using BackCodigoInteractivo.ModelsNotMapped.Inheritance.Responses;
+using BackCodigoInteractivo.ModelsNotMapped.Users.ModelFactory;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,7 +31,7 @@ namespace BackCodigoInteractivo.ModelsNotMapped.Users.Responses
             {
             }
 
-            public UsersResponse(ICollection<User> _users = null, String _message = " Error en la petición  ", int _codeState = 0,bool _status = false)
+            public UsersResponse(ICollection<UserModelFactory> _users = null, string _message = " Error en la petición  ", int _codeState = 0,bool _status = false)
             {
                 this.status = _status;
                 this.message = _message;
@@ -39,7 +40,7 @@ namespace BackCodigoInteractivo.ModelsNotMapped.Users.Responses
 
             }
 
-            public ICollection<User> users { get; set; }
+            public ICollection<UserModelFactory> users { get; set; }
 
         }
     }

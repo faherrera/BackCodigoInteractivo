@@ -24,14 +24,31 @@ namespace BackCodigoInteractivo.Repositories
 
         UserCourseModelFactory userCourseModelFactory = new UserCourseModelFactory();
 
-        User user = new User();
         
 
-        public List<UserCourseModelFactory> ListingCoursesAccordingTo(int UserID)
+        public List<User_Course> getListUserCourseForBooleanParams(int UserID,string Filter, string FilterValue)
+        {
+            List<User_Course> listUC = new List<User_Course>();
+            bool value = (FilterValue.ToUpper() == "TRUE") ? true : false;
+
+            switch (Filter.ToLower())
+            {
+                case "access":
+                    return listUC = ctx.UsersCourses.Where(x => x.UserID == UserID && x.Access == value).ToList();
+                case "instructor":
+                    return listUC = ctx.UsersCourses.Where(x => x.UserID == UserID && x.isInstructor == true).ToList();
+                default:
+                    return listUC = ctx.UsersCourses.Where(x => x.UserID == UserID && x.Access == value).ToList();
+
+            }
+        } 
+
+
+        public List<UserCourseModelFactory> ListingCoursesAccordingTo(int UserID,string Filter, string FilterValue)
         {
             List<UserCourseModelFactory> listUserModelFactory = new List<UserCourseModelFactory>();
 
-            var userCourses = ctx.UsersCourses.Where(x => x.UserID == UserID).ToList();
+            var userCourses = getListUserCourseForBooleanParams(UserID,Filter,FilterValue);
 
             foreach (var uc in userCourses)
             {
@@ -43,7 +60,7 @@ namespace BackCodigoInteractivo.Repositories
             return listUserModelFactory;
         }
 
-        public ListUsersCoursesResponse ListAllCoursesForEachUser(string Username) {
+        public ListUsersCoursesResponse ListAllCoursesForEachUser(string Username,string Filter = "Access",string valueFilter = "true") {
 
             try
             {
@@ -53,7 +70,7 @@ namespace BackCodigoInteractivo.Repositories
 
                 if (user == null) return listUserCourseResponse = new ListUsersCoursesResponse("No existe el User solicitado", 2);
 
-                return listUserCourseResponse = new ListUsersCoursesResponse("Petición Correcta",1,ListingCoursesAccordingTo(user.UserID),true);
+                return listUserCourseResponse = new ListUsersCoursesResponse("Petición Correcta",1,ListingCoursesAccordingTo(user.UserID,Filter, valueFilter),true);
             }
             catch (Exception e )
             {
@@ -96,6 +113,8 @@ namespace BackCodigoInteractivo.Repositories
                 if(!validationUserCourse.existUserAndCourse(userCourseRequest)) return userCourseResponse = new UsersCoursesResponse("La petición debe contener usuario y curso existentes ");
 
                 UserAndCourse userAndCourse = new UserAndCourse(userCourseRequest.Username,userCourseRequest.CourseCode);
+
+                if(validationUserCourse.alreadyEnroled(userAndCourse.user.UserID,userAndCourse.course.Code)) return userCourseResponse = new UsersCoursesResponse("Ya está inscripto a este curso", 404);
 
                 User_Course _userCourse = new User_Course();
 

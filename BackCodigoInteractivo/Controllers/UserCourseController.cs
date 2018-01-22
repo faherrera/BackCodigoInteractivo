@@ -39,6 +39,21 @@ namespace BackCodigoInteractivo.Controllers
 
             return Json(userCourseRepo.ListAllCoursesForEachUser(username));
         }
+
+        /// <summary>
+        /// Este metodo retorna todos los cursos a los que pertenece determinado usuario según determinados filtros.
+        /// </summary>
+        /// <param name="username"></param>
+        /// <returns></returns>
+        // GET: api/UserCourse/?username="someUsername"
+        [HttpGet]
+        public IHttpActionResult GetFromUsernameWithBooleanFilters(string username,string filter,string valueFilter= "true")
+        {
+            return Json(userCourseRepo.ListAllCoursesForEachUser(username,filter,valueFilter));
+        }
+
+
+
         // GET: api/UserCourse/5
         public IHttpActionResult GetID(int id)
         {

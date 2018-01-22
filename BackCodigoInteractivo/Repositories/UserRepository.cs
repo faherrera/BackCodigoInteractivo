@@ -14,7 +14,8 @@ namespace BackCodigoInteractivo.Repositories
     public class UserRepository
     {
         public CodigoInteractivoContext db = new CodigoInteractivoContext();
-        
+        public UserModelFactory _userModelFactory = null;
+
         public ICollection<User> getAllUsers()
         {
             return db.Users.ToList();
@@ -46,15 +47,24 @@ namespace BackCodigoInteractivo.Repositories
         //To controller
         public UsersResponse listUsers() {
            UsersResponse _usersRes;
-            UserModelFactory userModelFactory;
+           
             try
             {
                 if (getAllUsers().Count() == 0)
                 {
-                    return _usersRes = new UsersResponse(null, "Aún no hay usuarios cargados", 2);
+                    return _usersRes = new UsersResponse(null, "Aún no hay usuarios cargados", 404);
                 }
 
-                return _usersRes = new UsersResponse(getAllUsers(),"Listado traido correctamente",1,true);
+                List<UserModelFactory> ListUserModelFactory = new List<ModelsNotMapped.Users.ModelFactory.UserModelFactory>();
+
+                foreach (var item in getAllUsers())
+                {
+                    _userModelFactory = new UserModelFactory(item.UserID,item.Username,item.Name,item.Email,item.PathProfileImage,item.RolID);
+
+                    ListUserModelFactory.Add(_userModelFactory);
+
+                }
+                return _usersRes = new UsersResponse(ListUserModelFactory,"Listado traido correctamente",1,true);
 
             }
             catch (Exception e)
@@ -70,14 +80,13 @@ namespace BackCodigoInteractivo.Repositories
         public UserResponse detailUser(int id)
         {
             UserResponse _userRes;
-            UserModelFactory userModel;
             try
             {
                 User _us = getUserById(id);
 
                 if (_us == null) return _userRes = new UserResponse("No existe el usuario con ese ID",2);
 
-                return _userRes = new UserResponse("User traido correctamente",1,userModel = new UserModelFactory(_us.UserID,_us.DNI,_us.Name,_us.Email,_us.Username),true);
+                return _userRes = new UserResponse("User traido correctamente",1, _us,true);
             }
             catch (Exception e)
             {

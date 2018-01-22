@@ -56,7 +56,7 @@ namespace BackCodigoInteractivo.Repositories
             ctx.Users.Add(user);
             ctx.SaveChanges();
 
-            return userLocalStorage = new UserLocalStorage(user.Name,user.Username, user.Email, user.Token);
+            return userLocalStorage = new UserLocalStorage(user.Username);
 
 
         }

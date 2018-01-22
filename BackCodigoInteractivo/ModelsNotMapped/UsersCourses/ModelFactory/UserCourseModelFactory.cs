@@ -18,7 +18,7 @@ namespace BackCodigoInteractivo.ModelsNotMapped.UsersCourses.ModelFactory
         public UserCourseModelFactory(int UserCourseID,int UserID,int CourseID,bool Access,string pathCertificate, bool isInstructor) {
             this.UserCourseID = UserCourseID;
             this.Username = ctx.Users.Find(UserID).Username;
-            this.Course = new SimpleCoursesModelFactory(CourseID);
+            this.Course = new SimpleCoursesModelFactory(CourseID);  //Traigo el curso con el model factory.
             this.Access = Access;
             this.pathCertificate = pathCertificate;
             this.isInstructor = isInstructor;
