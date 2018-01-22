@@ -77,7 +77,7 @@ namespace BackCodigoInteractivo.Repositories
             System.Diagnostics.Debug.WriteLine(user.Password);
 
             //Valores que ingreso por defecto
-            user.RolID = 1; //Sería cliente normal.
+            user.RoleID = 1; //Sería cliente normal.
             user.Token = rnd.Next(10000, 9999999).ToString();   //Le doy un number random para simular token. 
 
             return user;

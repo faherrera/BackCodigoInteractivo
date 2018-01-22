@@ -4,6 +4,7 @@ using BackCodigoInteractivo.ModelsNotMapped.Users.ModelFactory;
 using BackCodigoInteractivo.ModelsNotMapped.Users.Responses;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Web;
 using System.Web.Helpers;
@@ -59,7 +60,9 @@ namespace BackCodigoInteractivo.Repositories
 
                 foreach (var item in getAllUsers())
                 {
-                    _userModelFactory = new UserModelFactory(item.UserID,item.Username,item.Name,item.Email,item.PathProfileImage,item.RolID);
+                    Debug.WriteLine(item.Role.Title);
+                    _userModelFactory = new UserModelFactory(item.UserID, item.Username, item.Name, item.Email, item.PathProfileImage, item.Role.Title);
+
 
                     ListUserModelFactory.Add(_userModelFactory);
 
@@ -86,7 +89,7 @@ namespace BackCodigoInteractivo.Repositories
 
                 if (_us == null) return _userRes = new UserResponse("No existe el usuario con ese ID",2);
 
-                return _userRes = new UserResponse("User traido correctamente",1, _us,true);
+                return _userRes = new UserResponse("User traido correctamente",1, _userModelFactory = new UserModelFactory(_us.UserID,_us.Username,_us.Name,_us.Email,_us.PathProfileImage,_us.Role.Title),true);
             }
             catch (Exception e)
             {
@@ -109,7 +112,7 @@ namespace BackCodigoInteractivo.Repositories
                 db.Users.Add(user);
                 db.SaveChanges();
 
-                return _userRes = new UserResponse("Cargado correctamente",1,user,true);
+                return _userRes = new UserResponse("Cargado correctamente",1,null,true);
 
             }
             catch (Exception e)
@@ -143,13 +146,13 @@ namespace BackCodigoInteractivo.Repositories
                 _userModified.Email = user.Email;
                 _userModified.Name = user.Name;
                 _userModified.Password = user.Password;
-                _userModified.RolID = user.RolID;
+                _userModified.RoleID = user.RoleID;
                 _userModified.Token = user.Token;
                 _userModified.Username = user.Username;
 
                 db.Entry(_userModified).State = System.Data.Entity.EntityState.Modified;
                 db.SaveChanges();
-                return _user = new UserResponse(String.Format("Correctamente Actualizado el usuario {0}",_userModified.Name),1,_userModified,true);
+                return _user = new UserResponse(String.Format("Correctamente Actualizado el usuario {0}",_userModified.Name),1,null,true);
 
             }
             catch (Exception e)

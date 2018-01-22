@@ -18,7 +18,8 @@ namespace BackCodigoInteractivo.Models
         public string Username { get; set; }
         public string Password { get; set; }
         public string Token { get; set; }
-        public int? RolID { get; set; }     //RolID
-        
+
+        public int? RoleID { get; set; }     //RolID
+        public virtual Role Role { get; set; }
     }
 }

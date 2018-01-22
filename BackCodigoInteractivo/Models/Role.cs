@@ -11,5 +11,7 @@ namespace BackCodigoInteractivo.Models
         [Key]
         public int RoleID { get; set; }
         public string Title { get; set; }
+
+        public ICollection<User> Users { get; set; }
     }
 }
