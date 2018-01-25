@@ -10,7 +10,7 @@ namespace BackCodigoInteractivo.ModelsNotMapped.Users.ModelFactory
     {
         //private CodigoInteractivoContext ctx = new CodigoInteractivoContext();
 
-        public UserModelFactory(int UserID, string user, string Name, string Email, string Path, string Role)
+        public UserModelFactory(int UserID, string user, string Name, string Email, string Path, string Role,string dni,int roleId)
         {
             this.UserID = UserID;
             this.Name = Name;
@@ -18,13 +18,17 @@ namespace BackCodigoInteractivo.ModelsNotMapped.Users.ModelFactory
             this.Email = Email;
             PathProfileImage = Path;
             this.Role = Role;
+            this.DNI = dni;
+            this.RoleID = roleId;
         }
         public int UserID { get; set; }
+        public string DNI { get; set; }
         public string Name { get; set; }
         public string Email { get; set; }
         public string PathProfileImage { get; set; }
         public string Username { get; set; }
         public string Role { get; set; }
+        public int RoleID { get; set; }
     }
 
 }

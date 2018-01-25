@@ -2,6 +2,7 @@
 using BackCodigoInteractivo.Models;
 using BackCodigoInteractivo.ModelsNotMapped.Users.ModelFactory;
 using BackCodigoInteractivo.ModelsNotMapped.Users.Responses;
+using BackCodigoInteractivo.Repositories.Configs;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -16,6 +17,7 @@ namespace BackCodigoInteractivo.Repositories
     {
         public CodigoInteractivoContext db = new CodigoInteractivoContext();
         public UserModelFactory _userModelFactory = null;
+        EncryptionsRepository encryptrepo;
 
         public ICollection<User> getAllUsers()
         {
@@ -61,7 +63,7 @@ namespace BackCodigoInteractivo.Repositories
                 foreach (var item in getAllUsers())
                 {
                     Debug.WriteLine(item.Role.Title);
-                    _userModelFactory = new UserModelFactory(item.UserID, item.Username, item.Name, item.Email, item.PathProfileImage, item.Role.Title);
+                    _userModelFactory = new UserModelFactory(item.UserID, item.Username, item.Name, item.Email, item.PathProfileImage, item.Role.Title,item.DNI,item.RoleID);
 
 
                     ListUserModelFactory.Add(_userModelFactory);
@@ -89,7 +91,7 @@ namespace BackCodigoInteractivo.Repositories
 
                 if (_us == null) return _userRes = new UserResponse("No existe el usuario con ese ID",2);
 
-                return _userRes = new UserResponse("User traido correctamente",1, _userModelFactory = new UserModelFactory(_us.UserID,_us.Username,_us.Name,_us.Email,_us.PathProfileImage,_us.Role.Title),true);
+                return _userRes = new UserResponse("User traido correctamente",1, _userModelFactory = new UserModelFactory(_us.UserID,_us.Username,_us.Name,_us.Email,_us.PathProfileImage,_us.Role.Title,_us.DNI,_us.RoleID),true);
             }
             catch (Exception e)
             {
@@ -97,19 +99,24 @@ namespace BackCodigoInteractivo.Repositories
             }
         }
 
-        public UserResponse storeUser(User user)
+        public UserResponse storeUser(UserFromFrontend UFF)
         {
             UserResponse _userRes;
-
+            encryptrepo = new EncryptionsRepository();
             try
             {
-                if (user == null) return _userRes = new UserResponse("Error, debe enviar los datos.");
+                if (UFF == null) return _userRes = new UserResponse("Error, debe enviar los datos.");
 
-                if (busyEmail(user.Email)) return _userRes = new UserResponse("Error, este Email ya está ocupado.");
+                if (busyEmail(UFF.User.Email)) return _userRes = new UserResponse("Error, este Email ya está ocupado.");
 
-                if (busyUsername(user.Username)) return _userRes = new UserResponse("Error, este Username ya está ocupado.");
+                if (busyUsername(UFF.User.Username)) return _userRes = new UserResponse("Error, este Username ya está ocupado.");
 
-                db.Users.Add(user);
+                if (!MultimediaRepository.base64Upload("Users", UFF.imageBase64, UFF.thumbnail)) return _userRes = new UserResponse("Error en la carga de las imagenes, intente nuevamente por favor",400);
+
+                UFF.User.PathProfileImage = UFF.thumbnail;
+                UFF.User.Password = encryptrepo.Encrypting(UFF.User.Password);
+
+                db.Users.Add(UFF.User);
                 db.SaveChanges();
 
                 return _userRes = new UserResponse("Cargado correctamente",1,null,true);
@@ -124,29 +131,35 @@ namespace BackCodigoInteractivo.Repositories
 
         }
             
-        public UserResponse putUser(int id, User user)
+        public UserResponse putUser(int id, UserFromFrontend UFF)
         {
             UserResponse _user;
+            encryptrepo = new EncryptionsRepository();
 
             try
             {
-                if(user == null) { return _user = new UserResponse("No puede estár vacia la petición",2); }
+               
 
-                if (busyEmail(user.Email)) return _user = new UserResponse("Error, este Email ya está ocupado.");
+                if(UFF == null) { return _user = new UserResponse("No puede estár vacia la petición",2); }
 
-                if (busyUsername(user.Username)) return _user = new UserResponse("Error, este Username ya está ocupado.");
+                User user = UFF.User;
+
+                if (busyEmail(user.Email)) return _user = new UserResponse("Error, este Email ya está ocupado.",404);
+
+                if (busyUsername(user.Username)) return _user = new UserResponse("Error, este Username ya está ocupado.",404);
 
 
-                if (getUserById(id) == null) { return _user = new UserResponse("No existe ningún Usuario con ese ID",2); }
+                if (getUserById(id) == null) { return _user = new UserResponse("No existe ningún Usuario con ese ID",404); }
 
                 //Cargandolo.
 
                 User _userModified = getUserById(id);
 
+                _userModified.PathProfileImage = !string.IsNullOrEmpty(UFF.imageBase64) ?  (MultimediaRepository.base64Upload("Users",UFF.imageBase64,UFF.thumbnail) ? UFF.thumbnail : _userModified.PathProfileImage) : _userModified.PathProfileImage;
                 _userModified.Email = user.Email;
                 _userModified.Name = user.Name;
-                _userModified.Password = user.Password;
-                _userModified.RoleID = user.RoleID;
+                _userModified.Password = (!string.IsNullOrEmpty(user.Password)) ? encryptrepo.Encrypting(user.Password) : _userModified.Password;
+                _userModified.RoleID = user.RoleID; 
                 _userModified.Token = user.Token;
                 _userModified.Username = user.Username;
 

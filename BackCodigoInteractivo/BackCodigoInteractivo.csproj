@@ -240,6 +240,7 @@
     <Compile Include="ModelsNotMapped\UsersCourses\Responses\UserAndCourse.cs" />
     <Compile Include="ModelsNotMapped\UsersCourses\Responses\UsersCoursesResponse.cs" />
     <Compile Include="ModelsNotMapped\Users\ModelFactory\MyCoursesModelFactory.cs" />
+    <Compile Include="ModelsNotMapped\Users\ModelFactory\UserFromFrontend.cs" />
     <Compile Include="ModelsNotMapped\Users\ModelFactory\UserModelFactory.cs" />
     <Compile Include="ModelsNotMapped\Users\Responses\Responses.cs" />
     <Compile Include="Models\Class_Course.cs" />
@@ -253,6 +254,7 @@
     <Compile Include="Repositories\Auth\CredentialsRepository.cs" />
     <Compile Include="Repositories\ClassesRepository.cs" />
     <Compile Include="Repositories\Configs\EncryptionsRepository.cs" />
+    <Compile Include="Repositories\Configs\MultimediaRepository.cs" />
     <Compile Include="Repositories\Courses\CourseRepository.cs" />
     <Compile Include="Repositories\Courses\ValidationCourseRepository.cs" />
     <Compile Include="Repositories\InheritanceRepository\GeneralRepository.cs" />

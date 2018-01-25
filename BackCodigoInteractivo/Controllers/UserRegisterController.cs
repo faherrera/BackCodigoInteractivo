@@ -1,12 +1,14 @@
 ﻿using BackCodigoInteractivo.DAL;
 using BackCodigoInteractivo.Models;
 using BackCodigoInteractivo.ModelsFactory;
+using BackCodigoInteractivo.ModelsNotMapped.Users.ModelFactory;
 using BackCodigoInteractivo.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Web;
 using System.Web.Http;
 using System.Web.Http.Cors;
 
@@ -35,13 +37,13 @@ namespace BackCodigoInteractivo.Controllers
 
 
         // POST: api/User
-        public IHttpActionResult Post(User user)
+        public IHttpActionResult Post(UserFromFrontend user)
         {
             return Json(ur.storeUser(user));            
         }
 
         // PUT: api/User/5
-        public IHttpActionResult Put(int id, User user)
+        public IHttpActionResult Put(int id, UserFromFrontend user)
         {
             return Json(ur.putUser(id,user));
 
