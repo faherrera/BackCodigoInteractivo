@@ -21,5 +21,7 @@ namespace BackCodigoInteractivo.Models
 
         public int RoleID { get; set; }     //RolID
         public virtual Role Role { get; set; }
+
+        public ICollection<User_Course> UserCourses { get; set; }
     }
 }

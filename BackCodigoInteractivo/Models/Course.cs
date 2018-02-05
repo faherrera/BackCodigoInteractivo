@@ -38,5 +38,6 @@ namespace BackCodigoInteractivo.Models
         public string Thumbnail { get; set; }
         public int? ProfessorID { get; set; }       //The professor of the course. 
 
+        //public ICollection<User_Course> UserCourse { get; set; }
     }
 }

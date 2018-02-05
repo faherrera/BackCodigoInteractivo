@@ -16,5 +16,8 @@ namespace BackCodigoInteractivo.Models
         public string pathCertificate { get; set; } //En caso de tener certificado se verá aquí el PATH.
         public bool isInstructor { get; set; }  //Si es instructor debe ser True. Esto le dará la posibilidad de subir y modificar el curso.
 
+        public virtual User User { get; set; }
+        //public virtual Course Course { get; set; }
+
     }
 }

@@ -47,6 +47,26 @@ namespace BackCodigoInteractivo.Repositories
             return (string.IsNullOrWhiteSpace(_email)) ? false : db.Users.Any(x => x.Email == _email);   //En caso de ser vacio retornaré true porque es posible no tener un email definido aún.
         }
 
+        public ICollection<CourseBelongToModelFactory> GetCourseBelonging(int UserID)
+        {
+            var UserCourse = db.UsersCourses.Where(x => x.UserID == UserID).ToList();
+
+            List<CourseBelongToModelFactory> ListCourseBelong = new List<CourseBelongToModelFactory>();
+
+            foreach (var item in UserCourse)
+            {
+                CourseBelongToModelFactory CourseBelong = new CourseBelongToModelFactory {
+                     Name = db.Courses.Where(x=> x.Code == item.CourseID).First().Name,
+                     CourseCode = item.CourseID,
+                     IsProfessor = item.isInstructor,
+                     Access = item.Access
+                };
+
+                ListCourseBelong.Add(CourseBelong);
+            }
+
+            return ListCourseBelong;
+        }
         //To controller
         public UsersResponse listUsers() {
            UsersResponse _usersRes;
@@ -63,7 +83,7 @@ namespace BackCodigoInteractivo.Repositories
                 foreach (var item in getAllUsers())
                 {
                     Debug.WriteLine(item.Role.Title);
-                    _userModelFactory = new UserModelFactory(item.UserID, item.Username, item.Name, item.Email, item.PathProfileImage, item.Role.Title,item.DNI,item.RoleID);
+                    _userModelFactory = new UserModelFactory(item.UserID, item.Username, item.Name, item.Email, item.PathProfileImage, item.Role.Title,item.DNI,item.RoleID, GetCourseBelonging(item.UserID));
 
 
                     ListUserModelFactory.Add(_userModelFactory);
@@ -91,7 +111,7 @@ namespace BackCodigoInteractivo.Repositories
 
                 if (_us == null) return _userRes = new UserResponse("No existe el usuario con ese ID",2);
 
-                return _userRes = new UserResponse("User traido correctamente",1, _userModelFactory = new UserModelFactory(_us.UserID,_us.Username,_us.Name,_us.Email,_us.PathProfileImage,_us.Role.Title,_us.DNI,_us.RoleID),true);
+                return _userRes = new UserResponse("User traido correctamente",1, _userModelFactory = new UserModelFactory(_us.UserID,_us.Username,_us.Name,_us.Email,_us.PathProfileImage,_us.Role.Title,_us.DNI,_us.RoleID, GetCourseBelonging(_us.UserID)),true);
             }
             catch (Exception e)
             {
@@ -142,30 +162,32 @@ namespace BackCodigoInteractivo.Repositories
 
                 if(UFF == null) { return _user = new UserResponse("No puede estár vacia la petición",2); }
 
-                User user = UFF.User;
-
-                if (busyEmail(user.Email)) return _user = new UserResponse("Error, este Email ya está ocupado.",404);
-
-                if (busyUsername(user.Username)) return _user = new UserResponse("Error, este Username ya está ocupado.",404);
-
+              
 
                 if (getUserById(id) == null) { return _user = new UserResponse("No existe ningún Usuario con ese ID",404); }
 
+                User userOriginal = getUserById(id);
+
+                User userRequest = UFF.User;
+
+                if (userOriginal.Email != userRequest.Email && busyEmail(userRequest.Email)) return _user = new UserResponse("Error, este Email ya está ocupado.", 404);
+
+                if (userOriginal.Username != userRequest.Username && busyUsername(userRequest.Username)) return _user = new UserResponse("Error, este Username ya está ocupado.", 404);
+
                 //Cargandolo.
 
-                User _userModified = getUserById(id);
 
-                _userModified.PathProfileImage = !string.IsNullOrEmpty(UFF.imageBase64) ?  (MultimediaRepository.base64Upload("Users",UFF.imageBase64,UFF.thumbnail) ? UFF.thumbnail : _userModified.PathProfileImage) : _userModified.PathProfileImage;
-                _userModified.Email = user.Email;
-                _userModified.Name = user.Name;
-                _userModified.Password = (!string.IsNullOrEmpty(user.Password)) ? encryptrepo.Encrypting(user.Password) : _userModified.Password;
-                _userModified.RoleID = user.RoleID; 
-                _userModified.Token = user.Token;
-                _userModified.Username = user.Username;
+                userOriginal.PathProfileImage = !string.IsNullOrEmpty(UFF.imageBase64) ?  (MultimediaRepository.base64Upload("Users",UFF.imageBase64,UFF.thumbnail) ? UFF.thumbnail : userOriginal.PathProfileImage) : userOriginal.PathProfileImage;
+                userOriginal.Email = userRequest.Email;
+                userOriginal.Name = userRequest.Name;
+                userOriginal.Password = (!string.IsNullOrEmpty(userRequest.Password)) ? encryptrepo.Encrypting(userRequest.Password) : userOriginal.Password;
+                userOriginal.RoleID = userRequest.RoleID; 
+                userOriginal.Token = userRequest.Token;
+                userOriginal.Username = userRequest.Username;
 
-                db.Entry(_userModified).State = System.Data.Entity.EntityState.Modified;
+                db.Entry(userOriginal).State = System.Data.Entity.EntityState.Modified;
                 db.SaveChanges();
-                return _user = new UserResponse(String.Format("Correctamente Actualizado el usuario {0}",_userModified.Name),1,null,true);
+                return _user = new UserResponse(String.Format("Correctamente Actualizado el usuario {0}",userOriginal.Name),1,null,true);
 
             }
             catch (Exception e)

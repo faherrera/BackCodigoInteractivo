@@ -64,7 +64,23 @@ namespace BackCodigoInteractivo.Controllers
         // POST: api/UserCourse
         public IHttpActionResult Post(LinkUserCourseRequest userCourseRequest)
         {
+           
             return Json(userCourseRepo.linkUserAndCourse(userCourseRequest));
+        }
+
+        [HttpPut]
+        public IHttpActionResult PutBool(int courseCode, string username, string put)
+        {
+            var repo = userCourseRepo.UpdateBool(courseCode,username,put);
+
+            if (!repo.status)
+            {
+                HttpStatusCode statusCode = (HttpStatusCode)repo.codeState;
+
+                return Content(statusCode, repo.message);
+            }
+
+            return Ok(repo.message);
         }
 
         // PUT: api/UserCourse/5

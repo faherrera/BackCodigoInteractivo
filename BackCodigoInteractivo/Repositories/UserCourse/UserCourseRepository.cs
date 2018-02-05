@@ -25,6 +25,11 @@ namespace BackCodigoInteractivo.Repositories
         UserCourseModelFactory userCourseModelFactory = new UserCourseModelFactory();
 
         
+        public User_Course GetUserCourseFromCourseCodeAndUsername(int CourseCode, string Username)
+        {
+            return ctx.UsersCourses.Where(x => x.CourseID == CourseCode && x.User.Username == Username).FirstOrDefault();
+
+        }
 
         public List<User_Course> getListUserCourseForBooleanParams(int UserID,string Filter, string FilterValue)
         {
@@ -141,8 +146,52 @@ namespace BackCodigoInteractivo.Repositories
 
         }
 
-        
 
-        
+        public UsersCoursesResponse UpdateBool(int CourseCode, string Username,string Put)
+        {
+            using (ctx = new CodigoInteractivoContext()) //Instancio un nuevo contexto por si hay varias consultas al mismo tiempo.
+            {
+                try
+                {
+                    var UserCourse = GetUserCourseFromCourseCodeAndUsername(CourseCode, Username);
+
+                    if (UserCourse == null) return userCourseResponse = new UsersCoursesResponse("No existe el registro de inscripcion solicitado", 404);
+
+
+                    if (string.IsNullOrEmpty(Put)) return userCourseResponse = new UsersCoursesResponse("No puede ejecutar esa solicitud", 404);
+
+                    switch (Put.ToLower())
+                    {
+                        case "access":
+                            UserCourse.Access = !UserCourse.Access;
+                            break;
+                        case "professor":
+                            UserCourse.isInstructor = !UserCourse.isInstructor;
+                            break;
+                        default:
+                            return userCourseResponse = new UsersCoursesResponse("No puede ejecutar esa solicitud", 404);
+
+                    }
+
+                    if (UserCourse.isInstructor) UserCourse.Access = true;
+
+                    ctx.Entry(UserCourse).State = System.Data.Entity.EntityState.Modified;
+                    ctx.SaveChanges();
+                    return userCourseResponse = new UsersCoursesResponse(string.Format("Cambiado {0} correctamente", Put), 200, null, true);
+
+                }
+                catch (Exception e )
+                {
+
+                    return userCourseResponse = new UsersCoursesResponse("Error en el proceso ->  "+e.Message, 500);
+
+                }
+
+
+            }
+
+        }
+
+
     }
 }
