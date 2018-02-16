@@ -235,6 +235,7 @@
     <Compile Include="ModelsNotMapped\Roles\Responses\Responses.cs" />
     <Compile Include="ModelsNotMapped\TokenReceived.cs" />
     <Compile Include="ModelsNotMapped\UserResponse.cs" />
+    <Compile Include="ModelsNotMapped\UsersCourses\ModelFactory\UserCourseEnrollment.cs" />
     <Compile Include="ModelsNotMapped\UsersCourses\ModelFactory\UserCourseModelFactory.cs" />
     <Compile Include="ModelsNotMapped\UsersCourses\Request\LinkUserCourseRequest.cs" />
     <Compile Include="ModelsNotMapped\UsersCourses\Responses\UserAndCourse.cs" />

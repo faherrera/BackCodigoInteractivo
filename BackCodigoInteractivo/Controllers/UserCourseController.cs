@@ -21,9 +21,16 @@ namespace BackCodigoInteractivo.Controllers
         
 
         // GET: api/UserCourse
-        public IEnumerable<string> Get()
+        public IHttpActionResult Get()
         {
-            return new string[] { "value1", "value2" };
+            try
+            {
+                return Ok(userCourseRepo.GetAllUserCourses());
+            }
+            catch (Exception e)
+            {
+                return InternalServerError(e);
+            }
         }
 
         /// <summary>
@@ -89,8 +96,19 @@ namespace BackCodigoInteractivo.Controllers
         }
 
         // DELETE: api/UserCourse/5
-        public void Delete(int id)
+        [HttpDelete]
+        public IHttpActionResult Delete(int id)
         {
+            var repo = userCourseRepo.DeleteUserCourse(id);
+
+            if (!repo.status)
+            {
+                HttpStatusCode statusCode = (HttpStatusCode)repo.codeState;
+
+                return Content(statusCode, repo.message);
+            }
+
+            return Ok(repo.message);
         }
     }
 }

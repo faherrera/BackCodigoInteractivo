@@ -24,7 +24,28 @@ namespace BackCodigoInteractivo.Repositories
 
         UserCourseModelFactory userCourseModelFactory = new UserCourseModelFactory();
 
-        
+        public List<UserCourseEnrollment> GetAllUserCourses()
+        {
+            var ListUserCourse = ctx.UsersCourses.ToList();
+
+            List<UserCourseEnrollment> ListEnrollment = new List<UserCourseEnrollment>();
+            foreach (var item in ListUserCourse)
+            {
+                UserCourseEnrollment Enrollment = new UserCourseEnrollment()
+                {
+                     UserCourseID = item.UserCourseID,
+                     Username = item.User.Username,
+                      Access = item.Access,
+                    IsInstructor = item.isInstructor,
+                     CourseName = ctx.Courses.FirstOrDefault(x=> x.Code == item.CourseID).Name,
+                      CourseCode = item.CourseID,
+                };
+
+                ListEnrollment.Add(Enrollment);
+            }
+            return ListEnrollment;
+        }
+
         public User_Course GetUserCourseFromCourseCodeAndUsername(int CourseCode, string Username)
         {
             return ctx.UsersCourses.Where(x => x.CourseID == CourseCode && x.User.Username == Username).FirstOrDefault();
@@ -192,6 +213,32 @@ namespace BackCodigoInteractivo.Repositories
 
         }
 
+        public UsersCoursesResponse DeleteUserCourse(int UserCourseID)
+        {
+            using (ctx = new CodigoInteractivoContext())
+            {
+                try
+                {
+                    var userCourse = ctx.UsersCourses.Find(UserCourseID);
 
+                    if (userCourse == null)
+                    {
+                        userCourseResponse = new UsersCoursesResponse("Debe ingresar un id existente para eliminar", 404);
+                    }
+
+                    ctx.Entry(userCourse).State = System.Data.Entity.EntityState.Deleted;
+                    ctx.SaveChanges();
+
+                    return new UsersCoursesResponse("Correctamente eliminado",200,null,true);
+
+                }
+                catch (Exception e)
+                {
+                    return userCourseResponse = new UsersCoursesResponse(string.Format("Error al eliminar -> {0}",e.Message), 500);
+
+                }
+
+            }
+        }
     }
 }
