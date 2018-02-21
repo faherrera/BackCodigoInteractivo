@@ -12,8 +12,8 @@ namespace BackCodigoInteractivo.ModelsNotMapped.Authentication.General
          
         public UserLocalStorage(string username)
         {
-            var User = ctx.Users.FirstOrDefault();
-
+            var User = ctx.Users.FirstOrDefault( x => x.Username == username);
+            UserID = User.UserID;
             this.Name = User.Name;
             this.Username = User.Username;
             this.Email = User.Email;
@@ -21,6 +21,7 @@ namespace BackCodigoInteractivo.ModelsNotMapped.Authentication.General
             this.Image = User.PathProfileImage;
 
         }
+        public int UserID { get; set; }
         public string Name { get; set; }
         public string Username { get; set; }
         public string Email { get; set; }

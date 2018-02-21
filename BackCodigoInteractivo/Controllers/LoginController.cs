@@ -1,5 +1,6 @@
 ﻿using BackCodigoInteractivo.DAL;
 using BackCodigoInteractivo.Models;
+using BackCodigoInteractivo.ModelsNotMapped.Authentication.Login.Request;
 using BackCodigoInteractivo.Repositories;
 using System;
 using System.Collections.Generic;
@@ -30,9 +31,28 @@ namespace BackCodigoInteractivo.Controllers
 
         // POST: api/Login
         [HttpPost]
-        public IHttpActionResult Login(User user)
+        public IHttpActionResult Login(LoginRequest loginRequest)
         {
-            return Json(lrepo.processLogin(user));
+            if (loginRequest == null)
+            {
+                return Content(HttpStatusCode.BadRequest, "No puede estár vacia la peticion");
+            }
+
+            var result = lrepo.processLogin(loginRequest, "Estudiante");
+
+            if (result.status)
+            {
+                return Ok(result.data);
+            }
+
+            if (result.codeState == 401)
+            {
+                return Unauthorized();
+            }
+
+            return Content(HttpStatusCode.InternalServerError, "Ocurrio un error, intente nuevamente por favor " + result.message);
+
+
         }
 
         //// PUT: api/Login/5

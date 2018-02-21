@@ -166,7 +166,9 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Repositories\Admin\" />
     <Folder Include="Uploads\Courses\" />
+    <Folder Include="Views\Admin\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\BundleConfig.cs" />
@@ -201,6 +203,7 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\SampleDirection.cs" />
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
+    <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\ClassesCourseController.cs" />
     <Compile Include="Controllers\CoursesController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -221,6 +224,7 @@
     <Compile Include="ModelsFactory\RoleModelFactory.cs" />
     <Compile Include="ModelsNotMapped\Authentication\General\AuthenticationResponse.cs" />
     <Compile Include="ModelsNotMapped\Authentication\General\UserLocalStorage.cs" />
+    <Compile Include="ModelsNotMapped\Authentication\Login\Request\LoginRequest.cs" />
     <Compile Include="ModelsNotMapped\Authentication\Login\Responses\LoginResponse.cs" />
     <Compile Include="ModelsNotMapped\Authentication\SignUp\Request\SignUpRequest.cs" />
     <Compile Include="ModelsNotMapped\Authentication\SignUp\Responses\SignUpResponse.cs" />

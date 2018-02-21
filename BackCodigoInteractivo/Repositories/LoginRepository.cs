@@ -1,5 +1,6 @@
 ﻿using BackCodigoInteractivo.Models;
 using BackCodigoInteractivo.ModelsNotMapped.Authentication.General;
+using BackCodigoInteractivo.ModelsNotMapped.Authentication.Login.Request;
 using BackCodigoInteractivo.ModelsNotMapped.Authentication.Login.Responses;
 using BackCodigoInteractivo.Repositories.Auth;
 using System;
@@ -21,7 +22,7 @@ namespace BackCodigoInteractivo.Repositories
 
         }
 
-       public LoginResponse processLogin( User userFromBody)
+       public LoginResponse processLogin(LoginRequest userFromBody,string Rol)
         {
             //Consulto si el usuario es nulo.
 
@@ -30,6 +31,8 @@ namespace BackCodigoInteractivo.Repositories
                 if (userFromBody == null || string.IsNullOrWhiteSpace(userFromBody.Username)) return _loginResponse = new LoginResponse(null,false,"No puede enviar nulo",0);
 
                 User _user = getUserFromUsername(userFromBody.Username);
+
+                if(_user.Role.Title.ToUpper() != Rol.ToUpper()) return _loginResponse = new LoginResponse(null, false, "No puede enviar nulo", 401);
 
                 if (!credentialsRepo.CredentialsLoginMatch(_user, userFromBody.Password)) return _loginResponse = new LoginResponse(null,false,"Las credenciales no coinciden, por favor revisarlas.",0);
 
