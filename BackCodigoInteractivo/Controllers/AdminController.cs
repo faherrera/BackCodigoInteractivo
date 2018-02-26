@@ -1,5 +1,6 @@
 ﻿using BackCodigoInteractivo.ModelsNotMapped.Authentication.Login.Request;
 using BackCodigoInteractivo.Repositories;
+using BackCodigoInteractivo.Repositories.Admin;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,9 +15,34 @@ namespace BackCodigoInteractivo.Controllers
     public class AdminController : ApiController
     {
         LoginRepository lrepo = new LoginRepository();
+        
+        [HttpGet]
+        public IHttpActionResult Index()
+       {
+            ///Saber si puede acceder al layout Admin-Dashboard
+            ///
 
+
+            try
+            {
+                string TOKEN = Request.Headers.GetValues("Token").FirstOrDefault();
+
+                if (!string.IsNullOrEmpty(TOKEN) && AdminRepository.HaveAccess("Administrador", TOKEN))
+                {
+                    return Ok("Correctamente autorizado.");
+                }
+                return Unauthorized();
+            }
+            catch (Exception )
+            {
+
+                return Unauthorized();
+            }
+
+
+        }
         public IHttpActionResult LoginAdmin( LoginRequest loginRequest)
-        {
+          {
             if (loginRequest == null)
             {
                 return Content(HttpStatusCode.BadRequest,"No puede estár vacia la peticion");
@@ -39,5 +65,6 @@ namespace BackCodigoInteractivo.Controllers
 
 
         }
+
     }
 }

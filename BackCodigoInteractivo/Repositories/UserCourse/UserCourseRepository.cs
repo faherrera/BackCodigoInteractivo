@@ -240,5 +240,26 @@ namespace BackCodigoInteractivo.Repositories
 
             }
         }
+
+
+        /// <summary>
+        /// Saber si está inscripto, en caso de serlo devolverá true para poder hacer la peticion.
+        /// </summary>
+        /// <param name="Token"></param>
+        /// <param name="CourseCode"></param>
+        /// <returns></returns>
+        public bool BeEnrroled(string Token, int ClassCode)
+        {
+            var User = ctx.Users.FirstOrDefault(x => x.Token == Token);
+            var Class = ctx.Classes.FirstOrDefault(x => x.CodeClass == ClassCode);
+
+            if (User == null || Class == null)
+            {
+                return false;
+            }
+
+            return ctx.UsersCourses.Any(x => x.CourseID == Class.CourseID && x.UserID == User.UserID && x.Access == true);
+
+        }
     }
 }

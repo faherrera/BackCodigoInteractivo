@@ -110,5 +110,32 @@ namespace BackCodigoInteractivo.Controllers
 
             return Ok(repo.message);
         }
+
+        [HttpPost]
+        public IHttpActionResult BelongToEnrollment(int ClassCode)
+        {
+            try
+            {
+                string TOKEN = Request.Headers.GetValues("Token").FirstOrDefault();
+
+                if (string.IsNullOrEmpty(TOKEN) || ClassCode == 0)
+                {
+                    return Unauthorized();
+                }
+
+                if (!userCourseRepo.BeEnrroled(TOKEN, ClassCode))
+                {
+                    return Unauthorized(); 
+                }
+
+                return Ok();
+
+            }
+            catch (Exception e)
+            {
+
+                return Content(HttpStatusCode.InternalServerError,"Ocurrió un error, "+e.Message);
+            }
+        }
     }
 }
