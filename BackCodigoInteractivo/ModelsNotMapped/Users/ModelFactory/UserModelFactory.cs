@@ -10,7 +10,7 @@ namespace BackCodigoInteractivo.ModelsNotMapped.Users.ModelFactory
     {
         //private CodigoInteractivoContext ctx = new CodigoInteractivoContext();
 
-        public UserModelFactory(int UserID, string user, string Name, string Email, string Path, string Role,string dni,int roleId,ICollection<CourseBelongToModelFactory> courses)
+        public UserModelFactory(int UserID, string user, string Name, string Email, string Path, string Role,string dni,int roleId,ICollection<CourseBelongToModelFactory> courses,bool visibility)
         {
             this.UserID = UserID;
             this.Name = Name;
@@ -21,6 +21,7 @@ namespace BackCodigoInteractivo.ModelsNotMapped.Users.ModelFactory
             this.DNI = dni;
             this.RoleID = roleId;
             Courses = courses;
+            Visibility = visibility;
         }
         public int UserID { get; set; }
         public string DNI { get; set; }
@@ -30,7 +31,7 @@ namespace BackCodigoInteractivo.ModelsNotMapped.Users.ModelFactory
         public string Username { get; set; }
         public string Role { get; set; }
         public int RoleID { get; set; }
-        
+        public bool Visibility { get; set; }
         public ICollection<CourseBelongToModelFactory> Courses { get; set; }
     }
 

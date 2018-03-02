@@ -20,7 +20,7 @@ namespace BackCodigoInteractivo.ModelsNotMapped.Courses.ModelFactory
 
         public CourseModelFactory() { }
 
-        public CourseModelFactory(int code, string name,string description,string duration, TypesCourseEnum type, ModeEnum mode, LevelEnum level, string video, string thumb,int? profesorCode)
+        public CourseModelFactory(int code, string name,string description,string duration, TypesCourseEnum type, ModeEnum mode, LevelEnum level, string video, string thumb,int? profesorCode,string temary,Decimal price,DateTime startDate, bool availability = true)
         {
              
 
@@ -35,6 +35,10 @@ namespace BackCodigoInteractivo.ModelsNotMapped.Courses.ModelFactory
             this.Thumbnail = thumb;
             this.ProfessorID = profesorCode;
             this.Classes = ctx.Classes.Where(x => x.CourseID == code).ToList();
+            Price = price;
+            Temary = temary;
+            StartDate = startDate;
+            Availability = availability;
         }
 
 
@@ -48,6 +52,14 @@ namespace BackCodigoInteractivo.ModelsNotMapped.Courses.ModelFactory
         public string Video_preview { get; set; }
         public string Thumbnail { get; set; }
         public int? ProfessorID { get; set; }       //The professor of the course. 
+
+
+        public bool Availability { get; set; }
+        public decimal Price { get; set; }
+        public string Temary { get; set; }
+
+        public DateTime StartDate { get; set; }
+
 
         public ICollection<Class_Course> Classes { get; set; }
         //Aquí va a ir la relación con el usuario profesor.

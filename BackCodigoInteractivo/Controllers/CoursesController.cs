@@ -45,7 +45,7 @@ namespace BackCodigoInteractivo.Controllers
         // PUT: api/Courses/5
         public IHttpActionResult Put(int id, PCourse _pcourse)
         {
-            return Json(cr.putCourse(id,_pcourse));
+              return Json(cr.putCourse(id,_pcourse));
         }
 
         // DELETE: api/Courses/5
@@ -55,6 +55,11 @@ namespace BackCodigoInteractivo.Controllers
             return Json(cr.deleteCourse(id));
         }
 
+        [HttpPost]
+        public IHttpActionResult Availability( int id)
+        {
+            return Json(cr.ChangeAvailability(id));
+        }
 
      }
 }

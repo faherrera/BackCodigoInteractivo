@@ -136,7 +136,12 @@ namespace BackCodigoInteractivo.Repositories
         {
             try
             {
-                if(!validationUserCourse.existUserAndCourse(userCourseRequest)) return userCourseResponse = new UsersCoursesResponse("La petición debe contener usuario y curso existentes ");
+                var isAdmin = ctx.Users.Any(x => x.Username == userCourseRequest.Username && x.Role.Title == "Administrador");
+                if (isAdmin) return userCourseResponse = new UsersCoursesResponse("No puede inscribirse si es administrador");
+
+                if (!validationUserCourse.existUserAndCourse(userCourseRequest)) return userCourseResponse = new UsersCoursesResponse("La petición debe contener usuario y curso existentes ");
+
+
 
                 UserAndCourse userAndCourse = new UserAndCourse(userCourseRequest.Username,userCourseRequest.CourseCode);
 

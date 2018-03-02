@@ -55,5 +55,11 @@ namespace BackCodigoInteractivo.Controllers
         {
             return Json(ur.deleteUser(id));
         }
+
+        [HttpPost]
+        public IHttpActionResult Availability(int id)
+        {
+            return Json(ur.ChangeAvailability(id));
+        }
     }
 }

@@ -54,7 +54,11 @@ namespace BackCodigoInteractivo.Repositories
                         course.Description,course.Duration,
                         course.TypeCourse, course.Mode, 
                         course.Level,course.Video_preview,course.Thumbnail,
-                        course.ProfessorID);
+                        course.ProfessorID,
+                        course.Temary,
+                        course.Price,
+                        course.StartDate,
+                        course.Availability);
                     listModel.Add(_model);
                 }
 
@@ -116,6 +120,9 @@ namespace BackCodigoInteractivo.Repositories
                 _course.Video_preview = _pcourse.video_preview;
                 _course.Thumbnail = _pcourse.thumbnail;
                 _course.ProfessorID = _pcourse.professorId;
+                _course.Temary = _pcourse.temary;
+                _course.Price = _pcourse.price;
+                _course.StartDate = _pcourse.startDate;
 
                 ctx.Courses.Add(_course);
                 ctx.SaveChanges();
@@ -125,7 +132,11 @@ namespace BackCodigoInteractivo.Repositories
                         _course.Description, _course.Duration,
                         _course.TypeCourse, _course.Mode,
                         _course.Level, _course.Video_preview,_course.Thumbnail,
-                        _course.ProfessorID);
+                        _course.ProfessorID,
+                        _course.Temary,
+                        _course.Price,
+                        _course.StartDate
+                        );
                 return _courseR = new CourseResponse(_modelFactory, true, "Correctamente guardado", 1);
 
             }
@@ -159,7 +170,12 @@ namespace BackCodigoInteractivo.Repositories
                         _course.TypeCourse, _course.Mode,
                         _course.Level, _course.Video_preview,
                         _course.Thumbnail,
-                        _course.ProfessorID);
+                        _course.ProfessorID,
+                        _course.Temary,
+                        _course.Price,
+                        _course.StartDate,
+                        _course.Availability
+                        );
 
                 return courseResponse = new CourseResponse(_cfactory,true,"Correctamente traido",1);
 
@@ -205,16 +221,18 @@ namespace BackCodigoInteractivo.Repositories
 
                 }
 
-                _course.Code = _pcourse.code;
                 _course.Name = _pcourse.name;
                 _course.Description = _pcourse.description;
-                _course.Duration = _pcourse.duration;
+                _course.Duration = string.IsNullOrEmpty(_pcourse.duration) ? _course.Duration : _pcourse.duration;
                 _course.TypeCourse = (TypesCourseEnum)_pcourse.typecourse;  //Parseo.
                 _course.Mode = (ModeEnum)_pcourse.mode;
                 _course.Level = (LevelEnum)_pcourse.level;
                 _course.Video_preview = _pcourse.video_preview;
-                _course.Thumbnail = _pcourse.thumbnail;
+                _course.Thumbnail = string.IsNullOrEmpty(_pcourse.thumbnail) ? _course.Thumbnail : _pcourse.thumbnail;
                 _course.ProfessorID = _pcourse.professorId;
+                _course.Temary = _pcourse.temary;
+                _course.Price = _pcourse.price;
+                _course.StartDate = _pcourse.startDate;
 
                 ctx.Entry(_course).State = System.Data.Entity.EntityState.Modified;
                 ctx.SaveChanges();
@@ -224,7 +242,7 @@ namespace BackCodigoInteractivo.Repositories
                         _course.Description, _course.Duration,
                         _course.TypeCourse, _course.Mode,
                         _course.Level, _course.Video_preview,_course.Thumbnail,
-                        _course.ProfessorID);
+                        _course.ProfessorID,_course.Temary,_course.Price,_course.StartDate);
                 return courseResponse = new CourseResponse(_modelFactory, true, "Correctamente guardado",1);
 
             }
@@ -247,6 +265,15 @@ namespace BackCodigoInteractivo.Repositories
             try
             {
                 string name = _course.Name;
+
+                ///En caso de que haya inscripciones.
+                if (ctx.UsersCourses.Any(x=> x.CourseID == _course.Code))
+                {
+                    ChangeToUnAvailable(_course);
+
+                    return _cresponse = new CourseResponse(null, true, string.Format("El curso {0} no puede ser eliminado definitivamente ya que posee alumnos inscriptos, desinscribalos previamente, su estado cambió a NO DISPONIBLE",name), 1);
+                }
+
                 ctx.Courses.Remove(_course);
                 ctx.SaveChanges();
 
@@ -258,6 +285,35 @@ namespace BackCodigoInteractivo.Repositories
                 System.Diagnostics.Debug.WriteLine(e.Message);
                 return _cresponse = new CourseResponse(null,false,string.Format("Error en la petición -> {0}",e));
             }
+        }
+
+        private void ChangeToUnAvailable(Course course)
+        {
+            course.Availability = false;
+            ctx.Entry(course).State = System.Data.Entity.EntityState.Modified;
+            ctx.SaveChanges();
+        }
+
+        public CourseResponse ChangeAvailability(int code)
+        {
+            try
+            {
+                var course = ctx.Courses.FirstOrDefault(x => x.Code == code);
+
+                course.Availability = !course.Availability;
+
+                ctx.Entry(course).State = System.Data.Entity.EntityState.Modified;
+                ctx.SaveChanges();
+
+                return new CourseResponse(null, true, string.Format("Cambiada Disponbilidad de {0} correctamente", course.Name), 1);
+
+            }
+            catch (Exception e)
+            {
+
+                return new CourseResponse(null, false, string.Format("Ocurrio un problema al querer eliminar al curso {0}", e.Message),0);
+            }
+        
         }
         public bool base64Upload(string _b64,string imgName)
         {

@@ -19,9 +19,11 @@ namespace BackCodigoInteractivo.Models
         public string Password { get; set; }
         public string Token { get; set; }
 
+        public bool Availability { get; set; }
         public int RoleID { get; set; }     //RolID
         public virtual Role Role { get; set; }
 
+       
         public ICollection<User_Course> UserCourses { get; set; }
     }
 }

@@ -47,6 +47,38 @@ namespace BackCodigoInteractivo.Repositories
             return (string.IsNullOrWhiteSpace(_email)) ? false : db.Users.Any(x => x.Email == _email);   //En caso de ser vacio retornaré true porque es posible no tener un email definido aún.
         }
 
+        private void ChangeToUnAvailable(User user)
+        {
+            user.Availability = false;
+            db.Entry(user).State = System.Data.Entity.EntityState.Modified;
+            db.SaveChanges();
+        }
+
+
+        public UserResponse ChangeAvailability(int code)
+        {
+            {
+                try
+                {
+                    var user = db.Users.FirstOrDefault(x => x.UserID == code);
+
+                    user.Availability = !user.Availability;
+
+                    db.Entry(user).State = System.Data.Entity.EntityState.Modified;
+                    db.SaveChanges();
+
+                    return new UserResponse(string.Format("Cambiada Disponbilidad de {0} correctamente", user.Name),1,null, true);
+
+                }
+                catch (Exception e)
+                {
+
+                    return new UserResponse("Problema al cambiar la disponibildad del usuario "+e.Message,0,null,false);
+                }
+
+            }
+        }
+
         public ICollection<CourseBelongToModelFactory> GetCourseBelonging(int UserID)
         {
             var UserCourse = db.UsersCourses.Where(x => x.UserID == UserID).ToList();
@@ -83,7 +115,7 @@ namespace BackCodigoInteractivo.Repositories
                 foreach (var item in getAllUsers())
                 {
                     Debug.WriteLine(item.Role.Title);
-                    _userModelFactory = new UserModelFactory(item.UserID, item.Username, item.Name, item.Email, item.PathProfileImage, item.Role.Title,item.DNI,item.RoleID, GetCourseBelonging(item.UserID));
+                    _userModelFactory = new UserModelFactory(item.UserID, item.Username, item.Name, item.Email, item.PathProfileImage, item.Role.Title,item.DNI,item.RoleID, GetCourseBelonging(item.UserID), item.Availability);
 
 
                     ListUserModelFactory.Add(_userModelFactory);
@@ -111,7 +143,7 @@ namespace BackCodigoInteractivo.Repositories
 
                 if (_us == null) return _userRes = new UserResponse("No existe el usuario con ese ID",2);
 
-                return _userRes = new UserResponse("User traido correctamente",1, _userModelFactory = new UserModelFactory(_us.UserID,_us.Username,_us.Name,_us.Email,_us.PathProfileImage,_us.Role.Title,_us.DNI,_us.RoleID, GetCourseBelonging(_us.UserID)),true);
+                return _userRes = new UserResponse("User traido correctamente",1, _userModelFactory = new UserModelFactory(_us.UserID,_us.Username,_us.Name,_us.Email,_us.PathProfileImage,_us.Role.Title,_us.DNI,_us.RoleID, GetCourseBelonging(_us.UserID), _us.Availability),true);
             }
             catch (Exception e)
             {
@@ -201,26 +233,42 @@ namespace BackCodigoInteractivo.Repositories
         {
             UserResponse _userRes;
 
-            try
-            {
-                User _userToDelete = getUserById(id);
-
-
-                if (_userToDelete != null) _userRes = new UserResponse("No existe ningun User con ese ID", 2);
-
-
-                string name = _userToDelete.Name;
-
-                db.Users.Remove(_userToDelete);
-                db.SaveChanges();
-
-                return _userRes = new UserResponse(String.Format("Eliminado correctamente el usuario {0}",name),1,null,true);
-
-            }
-            catch (Exception e)
+            using (var trans =  db.Database.BeginTransaction())
             {
 
-                return _userRes = new UserResponse(String.Format("Ocurrió un error con la petición -> {0}",e.Message));
+                try
+                {
+                    User _userToDelete = getUserById(id);
+
+
+                    if (_userToDelete != null) _userRes = new UserResponse("No existe ningun User con ese ID", 2);
+
+
+                    string name = _userToDelete.Name;
+                    var list = db.UsersCourses.Where(x => x.UserID == _userToDelete.UserID).ToList();
+
+                    if (list.Count() > 0)
+                    {
+                        //Borro todas las inscripciones.
+
+                        foreach (var item in list)
+                        {
+                            db.UsersCourses.Remove(item);
+                        }
+                    }
+
+                    db.Users.Remove(_userToDelete);
+                    db.SaveChanges();
+
+                    trans.Commit();
+                    return _userRes = new UserResponse(String.Format("Eliminado correctamente el usuario {0}",name),1,null,true);
+
+                }
+                catch (Exception e)
+                {
+                    trans.Rollback();
+                    return _userRes = new UserResponse(String.Format("Ocurrió un error con la petición -> {0}",e.Message));
+                }
             }
         }
     }

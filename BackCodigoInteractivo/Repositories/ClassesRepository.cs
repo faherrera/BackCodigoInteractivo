@@ -7,6 +7,8 @@ using System.Web;
 using BackCodigoInteractivo.ModelsNotMapped;
 using BackCodigoInteractivo.ModelsNotMapped.ClassesCourse;
 using BackCodigoInteractivo.ModelsNotMapped.ClassesCourse.ModelFactory;
+using System.Web.Util;
+using System.Data.Entity;
 
 namespace BackCodigoInteractivo.Repositories
 {
@@ -151,17 +153,30 @@ namespace BackCodigoInteractivo.Repositories
             Class_Course _classToRemove = ctx.Classes.Where(x => x.CodeClass == code).First();
 
             string name = _classToRemove.TitleClass;
-                
-            try
-            {
-                ctx.Classes.Remove(_classToRemove);
-                ctx.SaveChanges();
-                return _cr = new ClassResponse(null,true,string.Format("Clase {0} eliminada correctamente",name),1);
-            }
-            catch (Exception e)
-            {
 
-                return _cr = new ClassResponse(null,false,"Ocurrió un error en la eliminación, por favor intente nuevamente" + e.Message);
+            using (var tr = ctx.Database.BeginTransaction())
+            {
+                try
+                {
+                    var listResources = ctx.Resources.Where(x => x.Class_CourseID == _classToRemove.CodeClass).ToList();
+
+                    foreach (var item in listResources)
+                    {
+                        ctx.Resources.Remove(item);
+                        
+                    }
+                    ctx.Classes.Remove(_classToRemove);
+                    ctx.SaveChanges();
+
+                    tr.Commit();
+                    return _cr = new ClassResponse(null, true, string.Format("Clase {0} eliminada correctamente", name), 1);
+                }
+                catch (Exception e)
+                {
+                    tr.Rollback();
+                    return _cr = new ClassResponse(null, false, "Ocurrió un error en la eliminación, por favor intente nuevamente" + e.Message);
+                }
+
             }
 
 

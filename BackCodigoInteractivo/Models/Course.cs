@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -36,6 +37,16 @@ namespace BackCodigoInteractivo.Models
         public LevelEnum Level { get; set; }
         public string Video_preview { get; set; }
         public string Thumbnail { get; set; }
+
+        [DefaultValue("80,00")]
+        public decimal Price { get; set; }
+        public string Temary { get; set; }
+
+        [DefaultValue("True")]
+        public bool Availability { get; set; }
+        [DefaultValue("getdate()")]
+        public DateTime StartDate { get; set; }
+
         public int? ProfessorID { get; set; }       //The professor of the course. 
 
         //public ICollection<User_Course> UserCourse { get; set; }

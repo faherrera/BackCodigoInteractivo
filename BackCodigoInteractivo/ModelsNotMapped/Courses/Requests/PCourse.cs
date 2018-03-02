@@ -20,5 +20,12 @@ namespace BackCodigoInteractivo.ModelsNotMapped.CoursesModels
         public string imageBase64 { get; set; }     //Imagen base 64 con sus codigos.
         public int? professorId { get; set; }
 
+        public bool availability { get; set; }
+        public decimal price { get; set; }
+        public string temary { get; set; }
+
+        public DateTime startDate { get; set; }
+
+        public DateTime finishDate { get; set; }
     }
 }
