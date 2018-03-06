@@ -210,6 +210,7 @@
     <Compile Include="Controllers\ResClassController.cs" />
     <Compile Include="Controllers\RolesController.cs" />
     <Compile Include="Controllers\SignUpController.cs" />
+    <Compile Include="Controllers\UserAccountController.cs" />
     <Compile Include="Controllers\UserCourseController.cs" />
     <Compile Include="Controllers\UserRegisterController.cs" />
     <Compile Include="DAL\CodigoInteractivoContext.cs" />
@@ -235,8 +236,10 @@
     <Compile Include="ModelsNotMapped\Inheritance\Responses\Base.cs" />
     <Compile Include="ModelsNotMapped\ResourcesClasses\ModelFactory\ResourcesModelFactory.cs" />
     <Compile Include="ModelsNotMapped\ResourcesClasses\Responses\ResClass.cs" />
+    <Compile Include="ModelsNotMapped\ResponseRepository.cs" />
     <Compile Include="ModelsNotMapped\Roles\Responses\Responses.cs" />
     <Compile Include="ModelsNotMapped\TokenReceived.cs" />
+    <Compile Include="ModelsNotMapped\UserAccount\Request\UpdateAccountRequest.cs" />
     <Compile Include="ModelsNotMapped\UserResponse.cs" />
     <Compile Include="ModelsNotMapped\UsersCourses\ModelFactory\UserCourseEnrollment.cs" />
     <Compile Include="ModelsNotMapped\UsersCourses\ModelFactory\UserCourseModelFactory.cs" />
@@ -267,6 +270,7 @@
     <Compile Include="Repositories\ResClassRepository.cs" />
     <Compile Include="Repositories\RoleRepository.cs" />
     <Compile Include="Repositories\SignUpRepository.cs" />
+    <Compile Include="Repositories\UserAccount\UserAccountRepository.cs" />
     <Compile Include="Repositories\UserCourse\UserCourseRepository.cs" />
     <Compile Include="Repositories\UserCourse\ValidationUserCourseRepository.cs" />
     <Compile Include="Repositories\UserRepository.cs" />

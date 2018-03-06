@@ -246,7 +246,30 @@ namespace BackCodigoInteractivo.Repositories
             }
         }
 
+        public UsersCoursesResponse DeleteFromCourseCode(int CourseCode,string Token)
+        {
+            try
+            {
 
+                var UserCourse = ctx.UsersCourses.Where(x => x.CourseID == CourseCode && x.User.Token == Token).FirstOrDefault();
+
+                if (UserCourse == null)
+                {
+                    return new UsersCoursesResponse("No existe el registro solicitado",404,null,false);
+                }
+
+                ctx.UsersCourses.Remove(UserCourse);
+                ctx.SaveChanges();
+
+                return new UsersCoursesResponse("Registro eliminado correctamente", 200, null, true);
+
+            }
+            catch (Exception e)
+            {
+
+                return new UsersCoursesResponse("Ocurrio algo inesperado, por favor contacte con el admin "+e.Message, 500, null, false);
+            }
+        }
         /// <summary>
         /// Saber si está inscripto, en caso de serlo devolverá true para poder hacer la peticion.
         /// </summary>
@@ -266,5 +289,6 @@ namespace BackCodigoInteractivo.Repositories
             return ctx.UsersCourses.Any(x => x.CourseID == Class.CourseID && x.UserID == User.UserID && x.Access == true);
 
         }
+
     }
 }

@@ -64,6 +64,7 @@ namespace BackCodigoInteractivo.Repositories
         public User parseSignUpToUser(SignUpRequest request)
         {
             Random rnd = new Random();
+            auth = new AuthRepository();
 
             User user = new User();
 
@@ -72,6 +73,7 @@ namespace BackCodigoInteractivo.Repositories
             user.Email = request.Email;
             user.Password = encRepo.Encrypting(request.Password); ///Debería llamar a un metodo que encripte la contraseña.
             user.DNI = request.DNI;
+            user.Token = auth.GenerateToken();
 
             System.Diagnostics.Debug.WriteLine(request.Password);
             System.Diagnostics.Debug.WriteLine(user.Password);

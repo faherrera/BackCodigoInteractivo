@@ -26,31 +26,40 @@ namespace BackCodigoInteractivo.Repositories
         {
             //Consulto si el usuario es nulo.
 
-            try
-            {
-                if (userFromBody == null || string.IsNullOrWhiteSpace(userFromBody.Username)) return _loginResponse = new LoginResponse(null,false,"No puede enviar nulo",0);
-
-                User _user = getUserFromUsername(userFromBody.Username);
-
-                if (_user == null) return _loginResponse = new LoginResponse(null, false, "El usuario no existe", 404);
-
-                if (_user.Role.Title.ToUpper() != Rol.ToUpper()) return _loginResponse = new LoginResponse(null, false, "No puede enviar nulo", 401);
-
-                if (!credentialsRepo.CredentialsLoginMatch(_user, userFromBody.Password)) return _loginResponse = new LoginResponse(null,false,"Las credenciales no coinciden, por favor revisarlas.",0);
-
-                _userLoginResponse = new UserLocalStorage(_user.Username);
-
-                return _loginResponse = new LoginResponse(_userLoginResponse,true,"Correctamente logueado",1);
-
-
-            }
-            catch (Exception e)
+            using (ctx = new DAL.CodigoInteractivoContext())
             {
 
-                return _loginResponse = new LoginResponse(null, false, string.Format("Error en la petición -> {0}",e.Message), 0);
+                try
+                {
+                    if (userFromBody == null || string.IsNullOrWhiteSpace(userFromBody.Username)) return _loginResponse = new LoginResponse(null,false,"No puede enviar nulo",0);
+
+                    User _user = ctx.Users.Where(x => x.Username == userFromBody.Username).FirstOrDefault();
+
+                    if (_user == null) return _loginResponse = new LoginResponse(null, false, "El usuario no existe", 404);
+
+                    if (_user.Role.Title.ToUpper() != Rol.ToUpper()) return _loginResponse = new LoginResponse(null, false, "No puede enviar nulo", 401);
+
+                    if (!credentialsRepo.CredentialsLoginMatch(_user, userFromBody.Password)) return _loginResponse = new LoginResponse(null,false,"Las credenciales no coinciden, por favor revisarlas.",0);
+
+                    AuthRepository auth = new AuthRepository();
+
+                    auth.UpdateUserToken(_user,ctx);
+                    _userLoginResponse = new UserLocalStorage(_user.Username);
+
+                    return _loginResponse = new LoginResponse(_userLoginResponse,true,"Correctamente logueado",1);
+
+
+                }
+                catch (Exception e)
+                {
+
+                    return _loginResponse = new LoginResponse(null, false, string.Format("Error en la petición -> {0}",e.Message), 0);
+                }
             }
 
             
         }
+
+     
     }
 }

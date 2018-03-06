@@ -61,10 +61,26 @@ namespace BackCodigoInteractivo.Repositories
 
         }
 
-        
 
-       
-       
+
+        public User UpdateUserToken(User user,CodigoInteractivoContext ctx)
+        {
+            user.Token = GenerateToken();
+
+            ctx.Entry(user).State = System.Data.Entity.EntityState.Modified;
+            ctx.SaveChanges();
+
+            return user;
+        }
+
+        public string GenerateToken()
+        {
+            string tok = Guid.NewGuid().ToString();
+
+            return tok.Replace("-", "");
+
+        }
+
 
     }
 }
