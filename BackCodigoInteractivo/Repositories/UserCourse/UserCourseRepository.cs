@@ -137,6 +137,7 @@ namespace BackCodigoInteractivo.Repositories
             try
             {
                 var isAdmin = ctx.Users.Any(x => x.Username == userCourseRequest.Username && x.Role.Title == "Administrador");
+
                 if (isAdmin) return userCourseResponse = new UsersCoursesResponse("No puede inscribirse si es administrador");
 
                 if (!validationUserCourse.existUserAndCourse(userCourseRequest)) return userCourseResponse = new UsersCoursesResponse("La petición debe contener usuario y curso existentes ");
@@ -147,11 +148,13 @@ namespace BackCodigoInteractivo.Repositories
 
                 if(validationUserCourse.alreadyEnroled(userAndCourse.user.UserID,userAndCourse.course.Code)) return userCourseResponse = new UsersCoursesResponse("Ya está inscripto a este curso", 404);
 
+                var Course = ctx.Courses.FirstOrDefault(x => x.Code == userCourseRequest.CourseCode);
+
                 User_Course _userCourse = new User_Course();
 
                 _userCourse.UserID = userAndCourse.user.UserID;
                 _userCourse.CourseID = userAndCourse.course.Code;
-                _userCourse.Access = userCourseRequest.Access;
+                _userCourse.Access = Course.TypeCourse == (TypesCourseEnum)1 ? true : false;
                 _userCourse.isInstructor = userCourseRequest.isInstructor;
                  
                 ctx.UsersCourses.Add(_userCourse);

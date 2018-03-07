@@ -22,11 +22,20 @@ namespace BackCodigoInteractivo.Controllers
         private CourseRepository cr = new CourseRepository();
 
         // GET: api/Courses
-        public IHttpActionResult Get()
+        [HttpGet]
+        public IHttpActionResult Get(string rol)
         {
-            return Json(cr.listCourses());
+            if (string.IsNullOrEmpty(rol))
+            {
+                return Json(cr.listCourses());
+            }
+
+            return Json(cr.listCourses("Administrador"));
+
+
         }
 
+       
         // GET: api/Courses/5
         public IHttpActionResult Get(int id)
         {
