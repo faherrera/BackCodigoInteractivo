@@ -103,7 +103,7 @@ namespace BackCodigoInteractivo.Repositories
         {
             if (_pcourse == null) return _courseR = new CourseResponse(null, false, " El curso está vacio");
 
-            if (GetCourse(_pcourse.code) != null)
+            if (GetCourse(_pcourse.code) != null || _pcourse.code == 0)
             {
                 if (_pcourse.code == 0)
                 {
