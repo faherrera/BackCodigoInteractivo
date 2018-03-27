@@ -60,6 +60,12 @@ namespace BackCodigoInteractivo.Controllers
                 return Unauthorized();
             }
 
+            if (result.codeState == 404)
+            {
+                return NotFound();
+            }
+
+
             return Content(HttpStatusCode.InternalServerError, "Ocurrio un error, intente nuevamente por favor " + result.message);
 
 

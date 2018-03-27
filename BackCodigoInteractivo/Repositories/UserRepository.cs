@@ -167,6 +167,7 @@ namespace BackCodigoInteractivo.Repositories
 
                 UFF.User.PathProfileImage = UFF.thumbnail;
                 UFF.User.Password = encryptrepo.Encrypting(UFF.User.Password);
+                UFF.User.Availability = true;
 
                 db.Users.Add(UFF.User);
                 db.SaveChanges();

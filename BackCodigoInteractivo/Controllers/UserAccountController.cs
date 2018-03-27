@@ -1,5 +1,9 @@
 ﻿using BackCodigoInteractivo.ModelsNotMapped.UserAccount.Request;
 using BackCodigoInteractivo.Repositories;
+<<<<<<< HEAD
+=======
+using BackCodigoInteractivo.Repositories.Auth;
+>>>>>>> testing
 using BackCodigoInteractivo.Repositories.UserAccount;
 using System;
 using System.Collections.Generic;
@@ -17,9 +21,32 @@ namespace BackCodigoInteractivo.Controllers
     {
         UserCourseRepository repo = new UserCourseRepository();
         UserAccountRepository userAccountRepo = new UserAccountRepository();
+<<<<<<< HEAD
         public IHttpActionResult Index()
         {
             return Ok();
+=======
+
+        [HttpPost]
+        public IHttpActionResult Index()
+        {
+
+            try
+            {
+                string TOKEN = Request.Headers.GetValues("Token").FirstOrDefault();
+
+                if (!string.IsNullOrEmpty(TOKEN) && CredentialsRepository.HaveAccess("Estudiante", TOKEN))
+                {
+                    return Ok("Correctamente autorizado.");
+                }
+                return Unauthorized();
+            }
+            catch (Exception e)
+            {
+
+                return Content(HttpStatusCode.InternalServerError, e.Message);
+            }
+>>>>>>> testing
         }
 
         /// <summary>

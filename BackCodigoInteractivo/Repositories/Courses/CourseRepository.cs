@@ -32,7 +32,7 @@ namespace BackCodigoInteractivo.Repositories
             
         }
 
-        public CourseResponses listCourses()
+        public CourseResponses listCourses(string rol = "Estudiante")
         {
             CourseResponses courseResponses;
 
@@ -47,20 +47,46 @@ namespace BackCodigoInteractivo.Repositories
 
                 List<CourseModelFactory> listModel = new List<CourseModelFactory>();
 
-                foreach (var course in _courses)
+                if (rol != "Estudiante")
                 {
-                    CourseModelFactory _model = new CourseModelFactory
-                        (course.Code,course.Name,
-                        course.Description,course.Duration,
-                        course.TypeCourse, course.Mode, 
-                        course.Level,course.Video_preview,course.Thumbnail,
-                        course.ProfessorID,
-                        course.Temary,
-                        course.Price,
-                        course.StartDate,
-                        course.Availability);
-                    listModel.Add(_model);
+                    foreach (var course in _courses)
+                    {
+
+                        CourseModelFactory _model = new CourseModelFactory
+                            (course.Code, course.Name,
+                            course.Description, course.Duration,
+                            course.TypeCourse, course.Mode,
+                            course.Level, course.Video_preview, course.Thumbnail,
+                            course.ProfessorID,
+                            course.Temary,
+                            course.Price,
+                            course.StartDate,
+                            course.Availability);
+                        listModel.Add(_model);
+                    }
+
+                }else
+                {
+                    foreach (var course in _courses)
+                    {
+                        if (course.Availability)
+                        {
+                            CourseModelFactory _model = new CourseModelFactory
+                                                       (course.Code, course.Name,
+                                                       course.Description, course.Duration,
+                                                       course.TypeCourse, course.Mode,
+                                                       course.Level, course.Video_preview, course.Thumbnail,
+                                                       course.ProfessorID,
+                                                       course.Temary,
+                                                       course.Price,
+                                                       course.StartDate,
+                                                       course.Availability);
+                            listModel.Add(_model);
+                        }
+                       
+                    }
                 }
+               
 
                 return courseResponses = new CourseResponses(listModel,true,"Traidos los cursos",1);
             }
@@ -77,7 +103,7 @@ namespace BackCodigoInteractivo.Repositories
         {
             if (_pcourse == null) return _courseR = new CourseResponse(null, false, " El curso está vacio");
 
-            if (GetCourse(_pcourse.code) != null)
+            if (GetCourse(_pcourse.code) != null || _pcourse.code == 0)
             {
                 if (_pcourse.code == 0)
                 {

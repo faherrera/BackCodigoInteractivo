@@ -37,6 +37,7 @@ namespace BackCodigoInteractivo.Repositories
 
                     if (_user == null) return _loginResponse = new LoginResponse(null, false, "El usuario no existe", 404);
 
+<<<<<<< HEAD
                     if (_user.Role.Title.ToUpper() != Rol.ToUpper()) return _loginResponse = new LoginResponse(null, false, "No puede enviar nulo", 401);
 
                     if (!credentialsRepo.CredentialsLoginMatch(_user, userFromBody.Password)) return _loginResponse = new LoginResponse(null,false,"Las credenciales no coinciden, por favor revisarlas.",0);
@@ -49,6 +50,24 @@ namespace BackCodigoInteractivo.Repositories
                     return _loginResponse = new LoginResponse(_userLoginResponse,true,"Correctamente logueado",1);
 
 
+=======
+                    if (!_user.Availability) return _loginResponse = new LoginResponse(null, false, "El usuario no está disponible para acceder", 401);
+
+
+                    if (_user.Role.Title.ToUpper() != Rol.ToUpper()) return _loginResponse = new LoginResponse(null, false, "No puede enviar nulo", 401);
+
+                    if (!credentialsRepo.CredentialsLoginMatch(_user, userFromBody.Password)) return _loginResponse = new LoginResponse(null,false,"Las credenciales no coinciden, por favor revisarlas.",0);
+
+
+                    AuthRepository auth = new AuthRepository();
+
+                    auth.UpdateUserToken(_user,ctx);
+                    _userLoginResponse = new UserLocalStorage(_user.Username);
+
+                    return _loginResponse = new LoginResponse(_userLoginResponse,true,"Correctamente logueado",1);
+
+
+>>>>>>> testing
                 }
                 catch (Exception e)
                 {
